@@ -8,6 +8,8 @@ Goで書かれたコマンドラインアプリケーション。MySQLからテ�
 go install github.com/digeon-inc/royle@HEAD
 ```
 
+[リリースノート](https://github.com/digeon-inc/royle/releases)
+
 ## 使用例
 
 ```zsh
