@@ -29,7 +29,7 @@ var (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "open-mysql",
+	Use:   "royle",
 	Short: "Generates documentation for the MySQL tables.",
 	Long:  "This is a command-line application written in Go that connects to a MySQL database, extracts table information, and generates a file documenting the database tables.",
 	Run: func(cmd *cobra.Command, args []string) {
