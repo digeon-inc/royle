@@ -1,14 +1,10 @@
-# OPEN MYSQL
+# royle
 
 Goで書かれたコマンドラインアプリケーション。MySQLデータベースに接続し、テーブル情報を抽出し、文書化したファイルを生成する。
 
-![Coverage](https://gitlab.com/digeon-inc/templates/open-mysql/badges/main/coverage.svg)
-
 ## install
 
-### gitlabにloginしてダウウンロード
 
-[リリースノート](https://gitlab.com/digeon-inc/templates/open-mysql/-/releases)
 
 ## 使用例
 
