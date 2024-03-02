@@ -4,7 +4,9 @@ Goで書かれたコマンドラインアプリケーション。MySQLからテ�
 
 ## install
 
-
+```zsh
+go install github.com/digeon-inc/royle@HEAD
+```
 
 ## 使用例
 
@@ -14,62 +16,61 @@ royle --host mysql --password password --port 3306 --user docker --dbname templa
 
 ### フラグ
 
--  -h, --help              
+- -h, --help
 コマンドについての説明
 
--  -o, --filename    
+- -o, --filename
 出力するファイルの名前 (デフォルト "output")
 
--  -f, --format     
+- -f, --format
 出力するファイルのフォーマット (デフォルト "md")
 
--  -s, --host       
+- -s, --host
 mysqlのホスト (必須)
 
--  -p, --password    
+- -p, --password
 mysqlのパスワード (必須)
 
--  -r, --port       
+- -r, --port
 mysqlのポート (必須)
 
--  -u, --user      
+- -u, --user
  mysqlの使用者 (必須)
 
--  -n, --dbname      
+- -n, --dbname
 表示させたいテーブルがあるデータベース名 (必須)
 
-## 出力データの各列について 
+## 出力データの各列について
 
--  Name      
+- Name
 カラムの名前。
 
--  TYPE      
+- TYPE
 カラムのデータ型。
 
-- Nullable  
+- Nullable
 カラムの NULL 値可能性。 この値は、NULL 値をカラムに格納できる場合は YES で、格納できない場合は NO
 
-- Constraints  
+- Constraints
 制約のタイプ。 値は、UNIQUE, PRIMARY KEY, FOREIGN KEY または (MySQL 8.0.16) CHECK
 
--  Referenced      
+- Referenced
  FOREIGN KEY が参照しているテーブルの名前。
 
--  Default      
+- Default
 カラムのデフォルト値。
 
--  Extra      
+- Extra
 カラムについての追加情報。
-    - AUTO_INCREMENT 属性
-    - ON UPDATE CURRENT_TIMESTAMP 属性
-    - 生成されたカラムの STORED GENERATED または VIRTUAL GENERATED。
-    - 式のデフォルト値を持つカラムの DEFAULT_GENERATED。
+  - AUTO_INCREMENT 属性
+  - ON UPDATE CURRENT_TIMESTAMP 属性
+  - 生成されたカラムの STORED GENERATED または VIRTUAL GENERATED。
+  - 式のデフォルト値を持つカラムの DEFAULT_GENERATED。
 
 ## 出力例
 
-# Table Specification
-
 ## orders
+
 | Name | Type | Nullable | Constraints | Referenced | Default | Extra |
 |-------------|----------------|-------------|-------------|-------|------------------------|-------------------|
 | id | int | NO | PRIMARY KEY |  |  | auto_increment |
@@ -77,8 +78,8 @@ mysqlのポート (必須)
 | quantity | int | YES |  |  | 1 |  |
 | user_id | int | YES | FOREIGN KEY | [users](#users) |  |  |
 
-
 ## users
+
 | Name | Type | Nullable | Constraints | Referenced | Default | Extra |
 |-------------|----------------|-------------|-------------|-------|------------------------|-------------------|
 | email | varchar(255) | NO | UNIQUE |  |  |  |
