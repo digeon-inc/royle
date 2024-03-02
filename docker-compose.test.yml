@@ -1,0 +1,37 @@
+services:
+  test-app:
+    build:
+      context: .
+      dockerfile: dockerfile.dev
+    volumes:
+      - .:/app
+    tty: true
+    environment:
+      - DB_USER=docker
+      - DB_PASSWORD=password
+      - DB_HOST=test-mysql
+      - DB_PORT=13306
+      - DB_NAME=template
+    depends_on:
+      test-mysql:
+        condition: service_healthy
+
+  test-mysql:
+    image: mysql:8.0.28
+    platform: linux/x86_64
+    ports:
+      - 13306:13306
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=template
+      - MYSQL_USER=docker
+      - MYSQL_PASSWORD=password
+      - TZ=Asia/Tokyo
+      - MYSQL_TCP_PORT=13306
+    volumes:
+      - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD
+
+
+
