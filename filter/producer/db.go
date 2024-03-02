@@ -3,34 +3,34 @@ package producer
 import (
 	"database/sql"
 
-	"gitlab.com/digeon-inc/templates/open-mysql/pipe"
+	"github.com/digeon-inc/royle/pipe"
 )
 
 func FetchColumnMetadata(db *sql.DB, schemaName string) ([]pipe.ColumnMetadata, error) {
 	query := `
-SELECT 
-	c.TABLE_NAME, 
-	c.COLUMN_NAME, 
+SELECT
+	c.TABLE_NAME,
+	c.COLUMN_NAME,
 	c.COLUMN_DEFAULT,
 	c.IS_NULLABLE,
 	c.COLUMN_TYPE,
 	c.EXTRA,
 	MAX(k.REFERENCED_TABLE_NAME) AS REFERENCED_TABLE_NAME,
 	GROUP_CONCAT(DISTINCT t.CONSTRAINT_TYPE) AS CONSTRAINT_TYPES
-FROM 
-	COLUMNS c 
-LEFT OUTER JOIN 
-	KEY_COLUMN_USAGE k ON c.TABLE_NAME = k.TABLE_NAME AND c.COLUMN_NAME = k.COLUMN_NAME 
+FROM
+	COLUMNS c
+LEFT OUTER JOIN
+	KEY_COLUMN_USAGE k ON c.TABLE_NAME = k.TABLE_NAME AND c.COLUMN_NAME = k.COLUMN_NAME
 LEFT OUTER JOIN
 	TABLE_CONSTRAINTS t ON k.CONSTRAINT_NAME = t.CONSTRAINT_NAME AND k.TABLE_NAME = t.TABLE_NAME
-WHERE 
+WHERE
 	c.TABLE_SCHEMA = ?
-GROUP BY 
-	c.TABLE_NAME, 
-	c.COLUMN_NAME, 
-	c.COLUMN_DEFAULT, 
-	c.IS_NULLABLE, 
-	c.COLUMN_TYPE, 
+GROUP BY
+	c.TABLE_NAME,
+	c.COLUMN_NAME,
+	c.COLUMN_DEFAULT,
+	c.IS_NULLABLE,
+	c.COLUMN_TYPE,
 	c.EXTRA;
 `
 	rows, err := db.Query(query, schemaName)

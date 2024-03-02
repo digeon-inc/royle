@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"gitlab.com/digeon-inc/templates/open-mysql/filter/consumer"
-	"gitlab.com/digeon-inc/templates/open-mysql/pipe"
+	"github.com/digeon-inc/royle/filter/consumer"
+	"github.com/digeon-inc/royle/pipe"
 )
 
 func TestExportToMarkdown(t *testing.T) {

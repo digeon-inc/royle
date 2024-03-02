@@ -1,6 +1,6 @@
 package transformer
 
-import "gitlab.com/digeon-inc/templates/open-mysql/pipe"
+import "github.com/digeon-inc/royle/pipe"
 
 // columnsがテーブル順であることが前提
 func ConvertColumnMetadataToTableMetaData(cols []pipe.ColumnMetadata) []pipe.TableMetaData {

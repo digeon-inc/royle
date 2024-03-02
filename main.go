@@ -1,6 +1,6 @@
 package main
 
-import "gitlab.com/digeon-inc/templates/open-mysql/cmd"
+import "github.com/digeon-inc/royle/cmd"
 
 func main() {
 	cmd.Execute()

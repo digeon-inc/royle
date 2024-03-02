@@ -4,7 +4,7 @@ import (
 	"html/template"
 	"io"
 
-	"gitlab.com/digeon-inc/templates/open-mysql/pipe"
+	"github.com/digeon-inc/royle/pipe"
 )
 
 func ExportToHTML(output io.Writer, tables []pipe.TableMetaData) error {

@@ -7,9 +7,9 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/spf13/cobra"
-	"gitlab.com/digeon-inc/templates/open-mysql/filter/consumer"
-	"gitlab.com/digeon-inc/templates/open-mysql/filter/producer"
-	"gitlab.com/digeon-inc/templates/open-mysql/filter/transformer"
+	"github.com/digeon-inc/royle/filter/consumer"
+	"github.com/digeon-inc/royle/filter/producer"
+	"github.com/digeon-inc/royle/filter/transformer"
 )
 
 const (

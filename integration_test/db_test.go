@@ -4,9 +4,9 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
-	"gitlab.com/digeon-inc/templates/open-mysql/filter/producer"
-	"gitlab.com/digeon-inc/templates/open-mysql/filter/transformer"
-	"gitlab.com/digeon-inc/templates/open-mysql/pipe"
+	"github.com/digeon-inc/royle/filter/producer"
+	"github.com/digeon-inc/royle/filter/transformer"
+	"github.com/digeon-inc/royle/pipe"
 )
 
 func TestFetchColumnMetadata(t *testing.T) {

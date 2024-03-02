@@ -1,4 +1,4 @@
-module gitlab.com/digeon-inc/templates/open-mysql
+module github.com/digeon-inc/royle
 
 go 1.21.5
 
