@@ -1,6 +1,6 @@
 # royle
 
-Goで書かれたコマンドラインアプリケーション。MySQLデータベースに接続し、テーブル情報を抽出し、文書化したファイルを生成する。
+Goで書かれたコマンドラインアプリケーション。MySQLからテーブル情報を抽出して、テーブルの仕様書を生成する。
 
 ## install
 
@@ -9,7 +9,7 @@ Goで書かれたコマンドラインアプリケーション。MySQLデータ�
 ## 使用例
 
 ```zsh
-open-mysql --host mysql --password password --port 3306 --user docker --dbname template 
+royle --host mysql --password password --port 3306 --user docker --dbname template 
 ```
 
 ### フラグ
