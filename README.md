@@ -1,16 +1,20 @@
 # royle
 
-Goで書かれたコマンドラインアプリケーション。MySQLサーバーからテーブル情報を抽出して、テーブルの仕様書を生成する。
+MYSQLドキュメントを生成するコマンドラインアプリケーション
 
-## install
+## Install
 
+### golang
+  
 ```zsh
 go install github.com/digeon-inc/royle@latest
 ```
 
+### Mac, Windows or Linux
+
 [リリースノート](https://github.com/digeon-inc/royle/releases)
 
-## 使用例
+## Usage
 
 ```zsh
 royle --host mysql --password password --port 3306 --user docker --dbname template 
@@ -37,10 +41,10 @@ mysqlのパスワード (必須)
 mysqlのポート (必須)
 
 - -u, --user
- mysqlの使用者 (必須)
+ mysqlのユーザー (必須)
 
 - -n, --dbname
-表示させたいテーブルがあるデータベース名 (必須)
+MYSQLのデータベース名 (必須)
 
 ## 出力データの各列について
 
