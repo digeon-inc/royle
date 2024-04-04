@@ -48,7 +48,9 @@ MYSQLのデータベース名 (必須)
 
 ## Output example
 
-## orders
+## Table Specification
+
+### orders
 
 | Name | Type | Nullable | Constraints | Referenced | Default | Extra |
 |-------------|----------------|-------------|-------------|-------|------------------------|-------------------|
@@ -57,7 +59,7 @@ MYSQLのデータベース名 (必須)
 | quantity | int | YES |  |  | 1 |  |
 | user_id | int | YES | FOREIGN KEY | [users](#users) |  |  |
 
-## users
+### users
 
 | Name | Type | Nullable | Constraints | Referenced | Default | Extra |
 |-------------|----------------|-------------|-------------|-------|------------------------|-------------------|
