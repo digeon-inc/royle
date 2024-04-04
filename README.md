@@ -93,3 +93,17 @@ FOREIGN KEY が参照しているテーブルの名前。
 - ON UPDATE CURRENT_TIMESTAMP 属性
 - 生成されたカラムの STORED GENERATED または VIRTUAL GENERATED
 - 式のデフォルト値を持つカラムの DEFAULT_GENERATED
+
+## Why?
+
+### 自動化による効率化
+
+royleを使うことでドキュメント生成を自動化でき、手作業での作業時間を節約できます。これにより、開発者やチームはより多くの時間を実際のコードの開発や修正に費やすことができます。
+
+### 正確性の確保
+
+royleはドキュメントを生成するときにmysqlのテーブル情報を毎回取得し、正確な情報を提供します。特に開発者がormを使っている場合、データベース上でテーブルがどのように表現されているかをormのドキュメントなしで正確に知ることができます。
+
+## TODO: Incorporated into CD pipeline
+
+
