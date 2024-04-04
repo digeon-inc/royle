@@ -20,60 +20,33 @@ go install github.com/digeon-inc/royle@latest
 royle --host mysql --password password --port 3306 --user docker --dbname template 
 ```
 
-### フラグ
+## Flags
 
-- -h, --help
+### -h, --help
 コマンドについての説明
 
-- -o, --filename
+### -o, --filename
 出力するファイルの名前 (デフォルト "output")
 
-- -f, --format
+### -f, --format
 出力するファイルのフォーマット (デフォルト "md")
 
-- -s, --host
-mysqlのホスト (必須)
+### -s, --host
+MYSQLのホスト (必須)
 
-- -p, --password
-mysqlのパスワード (必須)
+### -p, --password
+MYSQLのパスワード (必須)
 
-- -r, --port
-mysqlのポート (必須)
+### -r, --port
+MYSQLのポート (必須)
 
-- -u, --user
- mysqlのユーザー (必須)
+### -u, --user
+mysqlのユーザー (必須)
 
-- -n, --dbname
+### -n, --dbname
 MYSQLのデータベース名 (必須)
 
-## 出力データの各列について
-
-- Name
-カラムの名前。
-
-- TYPE
-カラムのデータ型。
-
-- Nullable
-カラムの NULL 値可能性。 この値は、NULL 値をカラムに格納できる場合は YES で、格納できない場合は NO
-
-- Constraints
-制約のタイプ。 値は、UNIQUE, PRIMARY KEY, FOREIGN KEY または (MySQL 8.0.16) CHECK
-
-- Referenced
- FOREIGN KEY が参照しているテーブルの名前。
-
-- Default
-カラムのデフォルト値。
-
-- Extra
-カラムについての追加情報。
-  - AUTO_INCREMENT 属性
-  - ON UPDATE CURRENT_TIMESTAMP 属性
-  - 生成されたカラムの STORED GENERATED または VIRTUAL GENERATED。
-  - 式のデフォルト値を持つカラムの DEFAULT_GENERATED。
-
-## 出力例
+## Output example
 
 ## orders
 
@@ -91,3 +64,30 @@ MYSQLのデータベース名 (必須)
 | email | varchar(255) | NO | UNIQUE |  |  |  |
 | id | int | NO | PRIMARY KEY |  |  | auto_increment |
 | name | varchar(255) | NO |  |  |  |  |
+
+## Output columns
+
+### Name
+カラムの名前。
+
+### TYPE
+カラムのデータ型。
+
+### Nullable
+カラムの NULL 値可能性。 この値は、NULL 値をカラムに格納できる場合は YES で、格納できない場合は NO
+
+### Constraints
+制約のタイプ。 値は、UNIQUE, PRIMARY KEY, FOREIGN KEY または (MySQL 8.0.16) CHECK
+
+### Referenced
+FOREIGN KEY が参照しているテーブルの名前。
+
+### Default
+カラムのデフォルト値。
+
+### Extra
+カラムについての追加情報。
+- AUTO_INCREMENT 属性
+- ON UPDATE CURRENT_TIMESTAMP 属性
+- 生成されたカラムの STORED GENERATED または VIRTUAL GENERATED
+- 式のデフォルト値を持つカラムの DEFAULT_GENERATED
