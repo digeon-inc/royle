@@ -5,7 +5,7 @@ Goで書かれたコマンドラインアプリケーション。MySQLサーバ�
 ## install
 
 ```zsh
-go install github.com/digeon-inc/royle@HEAD
+go install github.com/digeon-inc/royle@latest
 ```
 
 [リリースノート](https://github.com/digeon-inc/royle/releases)
