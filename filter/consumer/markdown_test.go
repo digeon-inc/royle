@@ -13,6 +13,7 @@ func TestExportToMarkdown(t *testing.T) {
 
 	type args struct {
 		output io.Writer
+		title  string
 		tables []pipe.TableMetaData
 	}
 	tests := []struct {
@@ -24,6 +25,7 @@ func TestExportToMarkdown(t *testing.T) {
 			name: "success",
 			args: args{
 				output: os.Stdout,
+				title:  "MySQL documentation",
 				tables: []pipe.TableMetaData{
 					{
 						TableName: "table1",
@@ -47,8 +49,9 @@ func TestExportToMarkdown(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			if err := consumer.ExportToMarkdown(tt.args.output, tt.args.tables); (err != nil) != tt.hasErr {
-				t.Errorf("ExportToHTML() error = %v, hasErr %v", err, tt.hasErr)
+			// TODO: ファイルの差分をとって内容が変わってないかチェックする。
+			if err := consumer.ExportToMarkdown(tt.args.output, tt.args.title, tt.args.tables); (err != nil) != tt.hasErr {
+				t.Errorf("ExportToMarkdown() error = %v, hasErr %v", err, tt.hasErr)
 			}
 		})
 	}

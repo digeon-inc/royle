@@ -11,7 +11,7 @@ func DSN() string {
 		dbPassword,
 		dbHost,
 		dbPort,
-		dbName,
+		database,
 	) + "?charset=utf8mb4&collation=utf8mb4_bin&parseTime=True"
 }
 
@@ -26,14 +26,10 @@ func INFORMATION_SCHEMA_DSN() string {
 	) + "?charset=utf8mb4&collation=utf8mb4_bin&parseTime=True"
 }
 
-func DBName() string {
-	return dbName
+func DatabaseName() string {
+	return database
 }
 
-func OutputFileName() string {
-	return outputFileName
-}
-
-func OutputFileFormat() string {
-	return outputFileFormat
+func Title() string {
+	return title
 }

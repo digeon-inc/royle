@@ -3,10 +3,10 @@ package integration_test
 import (
 	"testing"
 
-	"github.com/google/go-cmp/cmp"
 	"github.com/digeon-inc/royle/filter/producer"
 	"github.com/digeon-inc/royle/filter/transformer"
 	"github.com/digeon-inc/royle/pipe"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestFetchColumnMetadata(t *testing.T) {

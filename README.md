@@ -5,8 +5,8 @@ MYSQLドキュメントを生成するコマンドラインアプリケーショ
 ## Install
 
 ### golang
-  
-```zsh
+
+```bash
 go install github.com/digeon-inc/royle@latest
 ```
 
@@ -16,8 +16,22 @@ go install github.com/digeon-inc/royle@latest
 
 ## Usage
 
-```zsh
-royle --host mysql --password password --port 3306 --user docker --dbname template 
+### Linux or Mac
+
+```bash
+royle --host mysql --password password --port 3306 --user docker --database template | cat > doc.md
+```
+
+### Windows
+
+```powershell
+royle --host mysql --password password --port 3306 --user docker --database template | Out-File -FilePath doc.md -Encoding utf8
+```
+
+### with pandoc
+
+```bash
+ go run main.go --host mysql --password password --port 3306 --user docker --database template | pandoc -o doc.html
 ```
 
 ## Flags
@@ -25,11 +39,8 @@ royle --host mysql --password password --port 3306 --user docker --dbname templa
 ### -h, --help
 コマンドについての説明
 
-### -o, --filename
-出力するファイルの名前 (デフォルト "output")
-
-### -f, --format
-出力するファイルのフォーマット (デフォルトは"md", "html" と "md", "stdout" の三種類) 
+### -t, --title
+ドキュメントのタイトル (default "ROYLE")
 
 ### -s, --host
 MYSQLのホスト (必須)
@@ -43,7 +54,7 @@ MYSQLのポート (必須)
 ### -u, --user
 mysqlのユーザー (必須)
 
-### -n, --dbname
+### -d, --database
 MYSQLのデータベース名 (必須)
 
 ## Output example
