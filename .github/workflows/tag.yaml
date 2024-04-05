@@ -1,21 +1,16 @@
-name: Create Tag on Main Push
+name: Create Git Tag
 
-on:
-  push:
-    branches:
-      - main
+ on:
+   push:
+     branches:
+       - main
 
-jobs:
-  tag:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Create Tag
-        run: git tag -a v${{ github.run_number }} -m "Automated tag created by GitHub Actions"
-
-      - name: Push Tag
-        run: git push origin v${{ github.run_number }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+ jobs:
+   create-git-tag:
+     runs-on: ubuntu-latest
+     steps:
+       - uses: actions/checkout@v2
+       - run: |
+           echo "v$(date +%Y.%m.%d.%H.%M.%S)" > TAG_NAME
+           git tag $(cat TAG_NAME)
+           git push origin $(cat TAG_NAME)
