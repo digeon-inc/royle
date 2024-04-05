@@ -7,10 +7,10 @@ import (
 	"github.com/digeon-inc/royle/pipe"
 )
 
-func ExportToMarkdown(output io.Writer, tables []pipe.TableMetaData) error {
+func ExportToMarkdown(output io.Writer, title string, tables []pipe.TableMetaData) error {
 	markdownTemplate := `
-# Table Specification
-{{range .}}
+# {{.Title}}
+{{range .Tables}}
 ## {{.TableName}}
 | Name | Type | Nullable | Constraints | Referenced | Default | Extra |
 |-------------|----------------|-------------|-------------|-------|------------------------|-------------------|
@@ -24,6 +24,14 @@ func ExportToMarkdown(output io.Writer, tables []pipe.TableMetaData) error {
 		return err
 	}
 
-	return tmpl.Execute(output, tables)
+	data := struct {
+		Title  string
+		Tables []pipe.TableMetaData
+	}{
+		Title:  title,
+		Tables: tables,
+	}
+
+	return tmpl.Execute(output, data)
 
 }

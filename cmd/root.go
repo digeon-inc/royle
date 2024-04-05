@@ -5,27 +5,20 @@ import (
 	"log"
 	"os"
 
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/spf13/cobra"
 	"github.com/digeon-inc/royle/filter/consumer"
 	"github.com/digeon-inc/royle/filter/producer"
 	"github.com/digeon-inc/royle/filter/transformer"
-)
-
-const (
-	HTML     = "html"
-	MARKDOWN = "md"
-	STDOUT   = "stdout"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/spf13/cobra"
 )
 
 var (
-	outputFileFormat string
-	outputFileName   string
-	dbUser           string
-	dbPassword       string
-	dbHost           string
-	dbPort           string
-	dbName           string
+	title      string
+	dbUser     string
+	dbPassword string
+	dbHost     string
+	dbPort     string
+	database   string
 )
 
 var rootCmd = &cobra.Command{
@@ -39,26 +32,14 @@ var rootCmd = &cobra.Command{
 		}
 		defer db.Close()
 
-		source, err := producer.FetchColumnMetadata(db, DBName())
+		source, err := producer.FetchColumnMetadata(db, DatabaseName())
 		if err != nil {
 			log.Fatal(err)
 		}
 
 		tables := transformer.ConvertColumnMetadataToTableMetaData(source)
 
-		file, err := os.Create(OutputFileName())
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer file.Close()
-
-		switch OutputFileFormat() {
-		case HTML:
-			err = consumer.ExportToHTML(file, tables)
-		case MARKDOWN:
-			err = consumer.ExportToMarkdown(file, tables)
-		}
-		if err != nil {
+		if err = consumer.ExportToMarkdown(os.Stdout, Title(), tables); err != nil {
 			log.Fatal(err)
 		}
 	},
@@ -72,11 +53,7 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.Flags().StringVarP(&outputFileFormat, "format", "f", MARKDOWN, "output file format. Choose either md or html.")
-	if outputFileFormat != HTML && outputFileFormat != MARKDOWN {
-		log.Fatalf("%s is unavailable", outputFileFormat)
-	}
-	rootCmd.Flags().StringVarP(&outputFileName, "filename", "o", "output", "output file name")
+	rootCmd.Flags().StringVarP(&title, "title", "t", "ROYLE", "document title")
 
 	rootCmd.Flags().StringVarP(&dbUser, "user", "u", "", "mysql user")
 	if err := rootCmd.MarkFlagRequired("user"); err != nil {
@@ -98,9 +75,8 @@ func init() {
 		log.Fatal(err)
 	}
 
-	rootCmd.Flags().StringVarP(&dbName, "dbname", "n", "", "Database name you want to know about the table ")
-	if err := rootCmd.MarkFlagRequired("dbname"); err != nil {
+	rootCmd.Flags().StringVarP(&database, "database", "d", "", "mysql database name")
+	if err := rootCmd.MarkFlagRequired("database"); err != nil {
 		log.Fatal(err)
 	}
-
 }
