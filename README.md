@@ -29,7 +29,7 @@ royle --host mysql --password password --port 3306 --user docker --dbname templa
 出力するファイルの名前 (デフォルト "output")
 
 ### -f, --format
-出力するファイルのフォーマット (デフォルト "md")
+出力するファイルのフォーマット (デフォルトは"md", "html" と "md", "stdout" の三種類) 
 
 ### -s, --host
 MYSQLのホスト (必須)
