@@ -1,16 +1,16 @@
 name: Create Git Tag
 
- on:
-   push:
-     branches:
-       - main
+on:
+  push:
+    branches:
+      - main
 
- jobs:
-   create-git-tag:
-     runs-on: ubuntu-latest
-     steps:
-       - uses: actions/checkout@v2
-       - run: |
-           echo "v$(date +%Y.%m.%d.%H.%M.%S)" > TAG_NAME
-           git tag $(cat TAG_NAME)
-           git push origin $(cat TAG_NAME)
+jobs:
+  create-git-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          echo "v$(date +%Y.%m.%d.%H.%M.%S)" > TAG_NAME
+          git tag $(cat TAG_NAME)
+          git push origin $(cat TAG_NAME)
