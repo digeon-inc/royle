@@ -12,7 +12,7 @@ go install github.com/digeon-inc/royle@latest
 
 ### Mac, Windows or Linux
 
-[リリースノート](https://github.com/digeon-inc/royle/releases)
+[バイナリのリリースノート](https://github.com/digeon-inc/royle/releases)
 
 ## Usage
 
@@ -22,16 +22,19 @@ go install github.com/digeon-inc/royle@latest
 royle --host mysql --password password --port 3306 --user docker --database template | cat > doc.md
 ```
 
+#### with pandoc
+
+[pandoc](https://pandoc.org/)と合わせて使えば様々なフォーマットに変換することができます。
+
+```bash
+ royle --host mysql --password password --port 3306 --user docker --database template | pandoc -o doc.html
+```
+
+
 ### Windows
 
 ```powershell
 royle --host mysql --password password --port 3306 --user docker --database template | Out-File -FilePath doc.md -Encoding utf8
-```
-
-### with pandoc
-
-```bash
- go run main.go --host mysql --password password --port 3306 --user docker --database template | pandoc -o doc.html
 ```
 
 ## Flags
