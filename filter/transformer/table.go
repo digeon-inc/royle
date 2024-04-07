@@ -21,6 +21,7 @@ func ConvertColumnMetadataToTableMetaData(cols []pipe.ColumnMetadata) []pipe.Tab
 			IsNullable:          col.IsNullable,
 			ColumnType:          col.ColumnType,
 			Extra:               col.Extra,
+			Comment:             col.Comment,
 			ReferencedTableName: col.ReferencedTableName,
 			ConstraintTypes:     col.ConstraintTypes,
 		})

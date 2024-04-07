@@ -37,7 +37,7 @@ func init() {
 		id INT AUTO_INCREMENT PRIMARY KEY,
 		product_name VARCHAR(255) NOT NULL,
 		user_id INT,
-		quantity INT DEFAULT 1,
+		quantity INT DEFAULT 1 COMMENT 'Quantity of the product being ordered, defaults to 1',
 		FOREIGN KEY (user_id) REFERENCES users(id)
 	);
 	`

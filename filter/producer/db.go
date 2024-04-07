@@ -27,10 +27,11 @@ func FetchColumnMetadata(db *sql.DB, schemaName string) ([]pipe.ColumnMetadata, 
 		extra               sql.NullString
 		referencedTableName sql.NullString
 		constraintTypes     sql.NullString
+		comment             sql.NullString
 	)
 
 	for rows.Next() {
-		if err := rows.Scan(&tableName, &columnName, &columnDefault, &isNullable, &columnType, &extra, &referencedTableName, &constraintTypes); err != nil {
+		if err := rows.Scan(&tableName, &columnName, &columnDefault, &isNullable, &columnType, &extra, &comment, &referencedTableName, &constraintTypes); err != nil {
 			return nil, err
 		}
 		result = append(result, pipe.ColumnMetadata{
@@ -40,6 +41,7 @@ func FetchColumnMetadata(db *sql.DB, schemaName string) ([]pipe.ColumnMetadata, 
 			IsNullable:          isNullable.String,
 			ColumnType:          columnType.String,
 			Extra:               extra.String,
+			Comment:             comment.String,
 			ReferencedTableName: referencedTableName.String,
 			ConstraintTypes:     constraintTypes.String,
 		})

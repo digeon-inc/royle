@@ -36,6 +36,7 @@ func TestExportToMarkdown(t *testing.T) {
 								IsNullable:          "IsNullable1",
 								ColumnType:          "ColumnType1",
 								Extra:               "Extra1",
+								Comment:             "Comment1",
 								ReferencedTableName: "ReferencedTableName1",
 								ConstraintTypes:     "ConstraintTypes1",
 							},
