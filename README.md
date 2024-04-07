@@ -62,6 +62,8 @@ MYSQLのデータベース名 (必須)
 
 ## Output example
 
+TODO:自動生成する
+
 ### Table Specification
 
 #### orders
