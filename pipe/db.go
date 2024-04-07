@@ -9,6 +9,7 @@ type ColumnMetadata struct {
 	Extra               string
 	ReferencedTableName string
 	ConstraintTypes     string
+	Comment             string
 }
 
 type TableMetaData struct {
@@ -24,4 +25,5 @@ type Column struct {
 	Extra               string
 	ReferencedTableName string
 	ConstraintTypes     string
+	Comment             string
 }

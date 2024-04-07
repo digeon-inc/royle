@@ -12,9 +12,9 @@ func ExportToMarkdown(output io.Writer, title string, tables []pipe.TableMetaDat
 # {{.Title}}
 {{range .Tables}}
 ## {{.TableName}}
-| Name | Type | Nullable | Constraints | Referenced | Default | Extra |
-|-------------|----------------|-------------|-------------|-------|------------------------|-------------------|
-{{range .Columns}}| {{.ColumnName}} | {{.ColumnType}} | {{.IsNullable}} | {{.ConstraintTypes}} | {{if ne .ReferencedTableName ""}}[{{.ReferencedTableName}}](#{{.ReferencedTableName}}){{end}} | {{.ColumnDefault}} | {{.Extra}} |
+| Name | Type | Nullable | Constraints | Referenced | Default | Extra | Comment |
+| ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
+{{range .Columns}}| {{.ColumnName}} | {{.ColumnType}} | {{.IsNullable}} | {{.ConstraintTypes}} | {{if ne .ReferencedTableName ""}}[{{.ReferencedTableName}}](#{{.ReferencedTableName}}){{end}} | {{.ColumnDefault}} | {{.Extra}} | {{.Comment}} |
 {{end}}
 {{end}}
 `

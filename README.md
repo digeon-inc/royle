@@ -19,7 +19,7 @@ go install github.com/digeon-inc/royle@latest
 ### Linux or Mac
 
 ```bash
-royle --host mysql --password password --port 3306 --user docker --database template | cat > doc.md
+royle --host mysql --password password --port 3306 --user docker --database template > doc.md
 ```
 
 #### with pandoc
@@ -61,6 +61,8 @@ mysqlのユーザー (必須)
 MYSQLのデータベース名 (必須)
 
 ## Output example
+
+TODO:自動生成する
 
 ### Table Specification
 
@@ -107,6 +109,9 @@ FOREIGN KEY が参照しているテーブルの名前。
 - ON UPDATE CURRENT_TIMESTAMP 属性
 - 生成されたカラムの STORED GENERATED または VIRTUAL GENERATED
 - 式のデフォルト値を持つカラムの DEFAULT_GENERATED
+
+### Comment
+カラムについてのコメント。
 
 ## Why?
 

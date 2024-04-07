@@ -1,0 +1,29 @@
+{
+    "name": "go-dev-container-compose",
+    "dockerComposeFile": "docker-compose.yaml",
+    "service": "workspace",
+    "workspaceFolder": "/workspace",
+    "features": {
+        "ghcr.io/devcontainers/features/go:1": {
+            "version": "latest",
+            "golangciLintVersion": "latest"
+        },
+        "ghcr.io/devcontainers/features/common-utils:2": {
+            "installZsh": "true",
+            "configureZshAsDefaultShell": "true",
+            "installOhMyZsh": "true",
+            "installOhMyZshConfig": "true"
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "streetsidesoftware.code-spell-checker",
+                "golang.Go",
+                "mhutchie.git-graph",
+            ]
+        }
+    },
+    "postCreateCommand": "/bin/sh .devcontainer/postCreateCommand.sh",
+    "remoteUser": "vscode"
+}
