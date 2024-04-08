@@ -2,28 +2,41 @@ name: goreleaser
 
 on:
   push:
-    tags:
-      - "v*"
+    branches: ["main"]
 
 permissions:
   contents: write
-
+    
 jobs:
+  determine_release:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    outputs:
+      will_release: ${{ steps.determine_release.outputs.new_release_published }}
+    steps:
+      - uses: actions/checkout@v3
+      - id: determine_release
+        uses: cycjimmy/semantic-release-action@v3.0.0
+        with:
+          dry_run: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   goreleaser:
     runs-on: ubuntu-latest
+    needs:
+      - determine_release
+    if: ${{ needs.determine_release.outputs.will_release }}
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      -
-        name: Set up Go
+      - name: Set up Go
         uses: actions/setup-go@v4
         with:
           go-version: '1.19'
-      -
-        name: Run GoReleaser
+      - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v5
         with:
           # either 'goreleaser' (default) or 'goreleaser-pro'
