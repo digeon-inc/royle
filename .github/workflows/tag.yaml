@@ -1,16 +1,14 @@
-name: Create Git Tag
+name: tagpr
 
 on:
   push:
-    branches:
-      - main
-
+    branches: ["main"]
+    
 jobs:
-  create-git-tag:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: |
-          echo "v$(date +%Y.%m.%d.%H.%M.%S)" > TAG_NAME
-          git tag $(cat TAG_NAME)
-          git push origin $(cat TAG_NAME)
+      - uses: actions/checkout@v3
+      - uses: Songmu/tagpr@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
