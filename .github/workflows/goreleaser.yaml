@@ -11,8 +11,6 @@ permissions:
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       -
         name: Checkout
