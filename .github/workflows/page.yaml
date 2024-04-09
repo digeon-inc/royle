@@ -61,7 +61,7 @@ jobs:
           CSS_URL="https://raw.githubusercontent.com/sindresorhus/github-markdown-css/gh-pages/github-markdown.css"
           CSS_CONTENT=$(curl -s "$CSS_URL" | sed 's/\.markdown-//g')
           HTML_CONTENT=$(go run main.go --host localhost --password password --port 3306 --user test --database test | pandoc -f gfm)
-          echo "<style>$CSS_CONTENT</style>$HTML_CONTENT" > ./dist/index.html
+          echo "<style>$CSS_CONTENT</style><body>$HTML_CONTENT</body>" > ./dist/index.html
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
