@@ -15,7 +15,7 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: password
           MYSQL_DATABASE: test
-          MYSQL_USER: template-test
+          MYSQL_USER: test
           MYSQL_PASSWORD: password
           MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
         ports:
@@ -29,13 +29,10 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.17
+          go-version: 1.19
 
       - name: Install pandoc
         run: sudo apt-get update && sudo apt-get install -y pandoc
-
-      - name: Install royle
-        run: go install github.com/digeon-inc/royle@v1.20240408.092605
 
       - name: Execute SQL script to create tables
         run: mysql --protocol=tcp -uroot -h localhost -P 3306 -ppassword test --default-character-set=utf8mb4 < example.sql
@@ -44,7 +41,7 @@ jobs:
         run: |
           CSS_URL="https://raw.githubusercontent.com/sindresorhus/github-markdown-css/gh-pages/github-markdown.css"
           CSS_CONTENT=$(curl -s "$CSS_URL" | sed 's/\.markdown-//g')
-          HTML_CONTENT=$(royle --host mysql --password password --port 3306 --user root --database test | pandoc -f gfm)
+          HTML_CONTENT=$(go run main.go --host mysql --password password --port 3306 --user test --database test | pandoc -f gfm)
           echo "<style>$CSS_CONTENT</style>$HTML_CONTENT" > ./public/html
 
       - name: Deploy to GitHub Pages
