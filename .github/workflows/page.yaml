@@ -42,6 +42,7 @@ jobs:
 
       - name: Generate HTML and CSS
         run: |
+          rm -rf ./dist
           mkdir -p ./dist
           CSS_URL="https://raw.githubusercontent.com/sindresorhus/github-markdown-css/gh-pages/github-markdown.css"
           CSS_CONTENT=$(curl -s "$CSS_URL" | sed 's/\.markdown-//g')
@@ -51,5 +52,6 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
+          keep_files: true
           personal_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
