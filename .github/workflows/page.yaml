@@ -38,8 +38,7 @@ jobs:
         run: go install github.com/digeon-inc/royle@v1.20240408.092605
 
       - name: Execute SQL script to create tables
-        run: mysql -u root -ppassword test < example.sql
-
+        run: mysql --protocol=tcp -uroot -h localhost -P 3306 -ppassword test --default-character-set=utf8mb4 < example.sql
 
       - name: Generate HTML and CSS
         run: |
