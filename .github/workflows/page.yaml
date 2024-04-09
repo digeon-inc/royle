@@ -1,0 +1,55 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    services:
+      mysql:
+        image: mysql:8.0.28
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: test
+          MYSQL_USER: template-test
+          MYSQL_PASSWORD: password
+          MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+
+      - name: Install pandoc
+        run: sudo apt-get update && sudo apt-get install -y pandoc
+
+      - name: Install royle
+        run: go install github.com/digeon-inc/royle@v1.20240408.092605
+
+      - name: Execute SQL script to create tables
+        run: mysql -u root -ppassword test < example.sql
+
+
+      - name: Generate HTML and CSS
+        run: |
+          CSS_URL="https://raw.githubusercontent.com/sindresorhus/github-markdown-css/gh-pages/github-markdown.css"
+          CSS_CONTENT=$(curl -s "$CSS_URL" | sed 's/\.markdown-//g')
+          HTML_CONTENT=$(royle --host mysql --password password --port 3306 --user root --database test | pandoc -f gfm)
+          echo "<style>$CSS_CONTENT</style>$HTML_CONTENT" > ./public/html
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
