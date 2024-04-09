@@ -4,6 +4,7 @@ mysql/mysql-data
 .env.dev
 .idea
 cover.html
+public
 
 # Created by https://www.toptal.com/developers/gitignore/api/go
 # Edit at https://www.toptal.com/developers/gitignore?templates=go
