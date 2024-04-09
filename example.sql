@@ -20,7 +20,8 @@ CREATE TABLE orders (
     order_id INT AUTO_INCREMENT PRIMARY KEY,  
     user_id INT NOT NULL,  
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  
-    total_amount DECIMAL(10, 2) NOT NULL COMMENT 'Total amount of the order'
+    total_amount DECIMAL(10, 2) NOT NULL COMMENT 'Total amount of the order',
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
 CREATE TABLE order_details (
@@ -28,7 +29,9 @@ CREATE TABLE order_details (
     order_id INT NOT NULL,  
     product_id INT NOT NULL,  
     quantity INT NOT NULL DEFAULT 1 COMMENT 'Quantity of the product being ordered, defaults to 1',
-    subtotal DECIMAL(10, 2) NOT NULL  
+    subtotal DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id),
+    FOREIGN KEY (product_id) REFERENCES products(product_id)
 );
 
 CREATE TABLE categories (
@@ -43,14 +46,17 @@ CREATE TABLE reviews (
     user_id INT NOT NULL,  
     rating INT NOT NULL COMMENT 'Rating given by the user for the product',
     comment TEXT,  
-    review_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP  
+    review_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES products(product_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
 CREATE TABLE invoices (
     invoice_id INT AUTO_INCREMENT PRIMARY KEY,  
     order_id INT NOT NULL,  
     amount DECIMAL(10, 2) NOT NULL,  
-    invoice_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP  
+    invoice_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id)
 );
 
 CREATE TABLE regions (
@@ -79,7 +85,9 @@ CREATE TABLE employees (
     phone VARCHAR(20),  
     photo BLOB,  
     notes TEXT,  
-    manager_id INT  
+    manager_id INT,
+    FOREIGN KEY (region_id) REFERENCES regions(region_id),
+    FOREIGN KEY (manager_id) REFERENCES employees(employee_id)
 );
 
 CREATE TABLE carts (
@@ -87,5 +95,7 @@ CREATE TABLE carts (
     user_id INT NOT NULL,  
     product_id INT NOT NULL,  
     quantity INT NOT NULL DEFAULT 1 COMMENT 'Quantity of the product being ordered, defaults to 1',
-    added_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP  
+    added_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (product_id) REFERENCES products(product_id)
 );
