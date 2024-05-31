@@ -7,11 +7,11 @@ import (
 	"github.com/digeon-inc/royle/pipe"
 )
 
-//go:embed query.sql
-var querySQL string // query.sql ファイルをバイナリに埋め込む
+//go:embed column.sql
+var columnSQL string // column.sql ファイルをバイナリに埋め込む
 
 func FetchColumnMetadata(db *sql.DB, schemaName string) ([]pipe.ColumnMetadata, error) {
-	rows, err := db.Query(querySQL, schemaName)
+	rows, err := db.Query(columnSQL, schemaName)
 	if err != nil {
 		return nil, err
 	}

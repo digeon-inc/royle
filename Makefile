@@ -1,3 +1,10 @@
+# Tools
+.PHONY: tools
+tools:
+	go install github.com/cosmtrek/air@v1.49.0
+	go install github.com/golang/mock/mockgen@latest
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.54.1
+
 # Lint, Format
 .PHONY: lint
 lint: tools
