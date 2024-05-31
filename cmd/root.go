@@ -4,10 +4,12 @@ import (
 	"database/sql"
 	"log"
 	"os"
+	"sync"
 
 	"github.com/digeon-inc/royle/filter/consumer"
 	"github.com/digeon-inc/royle/filter/producer"
 	"github.com/digeon-inc/royle/filter/transformer"
+	"github.com/digeon-inc/royle/pipe"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/spf13/cobra"
 )
@@ -31,16 +33,35 @@ var rootCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 		defer db.Close()
-
-		columnSource, err := producer.FetchColumnMetadata(db, DatabaseName())
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		tableSource, err := producer.FetchTableMetadata(db, DatabaseName())
-		if err != nil {
-			log.Fatal(err)
-		}
+		
+		var (
+			columnSource []pipe.ColumnMetadata
+			tableSource  []pipe.TableMetadata
+			wg           sync.WaitGroup
+		)
+	
+		// ゴルーチンの開始
+		wg.Add(2)
+		go func() {
+			defer wg.Done()
+			var err error
+			columnSource, err = producer.FetchColumnMetadata(db, DatabaseName())
+			if err != nil {
+				log.Fatal(err)
+			}
+		}()
+	
+		go func() {
+			defer wg.Done()
+			var err error
+			tableSource, err = producer.FetchTableMetadata(db, DatabaseName())
+			if err != nil {
+				log.Fatal(err)
+			}
+		}()
+	
+		// すべてのゴルーチンの終了を待つ
+		wg.Wait()
 
 		tables := transformer.MergeMetadataIntoTables(columnSource,tableSource)
 
