@@ -39,7 +39,7 @@ func init() {
 		user_id INT,
 		quantity INT DEFAULT 1 COMMENT 'Quantity of the product being ordered, defaults to 1',
 		FOREIGN KEY (user_id) REFERENCES users(id)
-	);
+	) COMMENT='Stores basic information about orders';
 	`
 	if _, err = db.Exec(createOrdersTableSQL); err != nil {
 		log.Fatal(err)

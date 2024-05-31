@@ -1,17 +1,20 @@
 package transformer
 
-import "github.com/digeon-inc/royle/pipe"
-
+import (
+	"github.com/digeon-inc/royle/pipe"
+)
 
 // columnsがテーブル順であることが前提
 func MergeMetadataIntoTables(cols []pipe.ColumnMetadata, tables []pipe.TableMetadata) []pipe.Table {
 	result := make([]pipe.Table, 0, 100)
 	currentTableName := ""
 	currentColumns := make([]pipe.Column, 0, 20)
+
 	for i, col := range cols {
+		// カラムはテーブル順なので、テーブル名が変わったら、変わる前のテーブルの全カラムが取り出されたことを意味する。
 		if currentTableName != col.TableName {
 			if currentTableName != "" {
-				result = append(result, pipe.Table{TableName: currentTableName, Columns: currentColumns})
+				addTableToResult(&result, currentTableName, currentColumns, tables)
 			}
 			currentTableName = col.TableName
 			currentColumns = make([]pipe.Column, 0, 50)
@@ -27,9 +30,9 @@ func MergeMetadataIntoTables(cols []pipe.ColumnMetadata, tables []pipe.TableMeta
 			ConstraintTypes:     col.ConstraintTypes,
 		})
 
+		// 最後のテーブルは次のテーブルと比較できず追加されないから、明示的に追加する。
 		if i == len(cols)-1 {
-			currentTableMetadata := findMatchingTable(tables,currentTableName) 
-			result = append(result, pipe.Table{TableName: currentTableMetadata.TableName,Comment: currentTableMetadata.TableComment, Columns: currentColumns})
+			addTableToResult(&result, currentTableName, currentColumns, tables)
 		}
 
 	}
@@ -43,4 +46,19 @@ func findMatchingTable(tables []pipe.TableMetadata, targetTableName string) *pip
 		}
 	}
 	return nil
+}
+
+func addTableToResult(result *[]pipe.Table, tableName string, columns []pipe.Column, tables []pipe.TableMetadata) {
+	if currentTableMetadata := findMatchingTable(tables, tableName); currentTableMetadata != nil {
+		*result = append(*result, pipe.Table{
+			TableName: currentTableMetadata.TableName,
+			Comment:   currentTableMetadata.TableComment,
+			Columns:   columns,
+		})
+	} else {
+		*result = append(*result, pipe.Table{
+			TableName: tableName,
+			Columns:   columns,
+		})
+	}
 }

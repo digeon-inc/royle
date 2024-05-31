@@ -21,7 +21,7 @@ func TestFetchColumnMetadata(t *testing.T) {
 			want: []pipe.Table{
 				{
 					TableName: "orders",
-					Comment: "",
+					Comment: "Stores basic information about orders",
 					Columns: []pipe.Column{
 						{
 							ColumnName:          "id",
