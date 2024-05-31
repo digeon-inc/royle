@@ -32,12 +32,17 @@ var rootCmd = &cobra.Command{
 		}
 		defer db.Close()
 
-		source, err := producer.FetchColumnMetadata(db, DatabaseName())
+		columnSource, err := producer.FetchColumnMetadata(db, DatabaseName())
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		tables := transformer.ConvertColumnMetadataToTableMetaData(source)
+		tableSource, err := producer.FetchTableMetadata(db, DatabaseName())
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		tables := transformer.ConvertColumnMetadataToTableMetaData(columnSource,tableSource)
 
 		if err = consumer.ExportToMarkdown(os.Stdout, Title(), tables); err != nil {
 			log.Fatal(err)

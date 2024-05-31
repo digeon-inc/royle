@@ -1,7 +1,12 @@
 package pipe
 
-type ColumnMetadata struct {
-	TableName           string
+type Table struct {
+	TableName string
+	Comment string
+	Columns   []Column
+}
+
+type Column struct {
 	ColumnName          string
 	ColumnDefault       string
 	IsNullable          string
@@ -11,9 +16,3 @@ type ColumnMetadata struct {
 	ConstraintTypes     string
 	Comment             string
 }
-
-type TableMetadata struct {
-    TableName   string
-    TableComment string
-}
-

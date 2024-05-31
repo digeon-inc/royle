@@ -25,7 +25,7 @@ func init() {
 		id INT AUTO_INCREMENT PRIMARY KEY,
 		name VARCHAR(255) NOT NULL,
 		email VARCHAR(255) NOT NULL UNIQUE
-	);
+	) COMMENT='Stores basic information about users';
 	`
 
 	if _, err = db.Exec(createUsersTableSQL); err != nil {

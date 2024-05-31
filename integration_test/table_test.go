@@ -13,14 +13,15 @@ func TestFetchColumnMetadata(t *testing.T) {
 
 	tests := []struct {
 		name   string
-		want   []pipe.TableMetaData
+		want   []pipe.Table
 		hasErr bool
 	}{
 		{
 			name: "success",
-			want: []pipe.TableMetaData{
+			want: []pipe.Table{
 				{
 					TableName: "orders",
+					Comment: "",
 					Columns: []pipe.Column{
 						{
 							ColumnName:          "id",
@@ -66,6 +67,7 @@ func TestFetchColumnMetadata(t *testing.T) {
 				},
 				{
 					TableName: "users",
+					Comment: "Stores basic information about users",
 					Columns: []pipe.Column{
 						{
 							ColumnName:          "email",
@@ -106,11 +108,18 @@ func TestFetchColumnMetadata(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			source, err := producer.FetchColumnMetadata(informationSchemaDB, DBName())
+			columnSource, err := producer.FetchColumnMetadata(informationSchemaDB, DBName())
 			if (err != nil) != tt.hasErr {
 				t.Errorf("FetchColumnMetadata error = %v, hasErr %v", err, tt.hasErr)
 			}
-			got := transformer.ConvertColumnMetadataToTableMetaData(source)
+
+			tableSource ,err := producer.FetchTableMetadata(informationSchemaDB,DBName())
+			if (err != nil) != tt.hasErr {
+				t.Errorf("FetchTableMetadata error = %v, hasErr %v", err, tt.hasErr)
+			}
+			t.Log(tableSource)
+
+			got := transformer.ConvertColumnMetadataToTableMetaData(columnSource,tableSource)
 			if !cmp.Equal(got, tt.want) {
 				t.Errorf("diff =%v", cmp.Diff(got, tt.want))
 			}
