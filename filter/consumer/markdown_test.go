@@ -40,6 +40,16 @@ func TestExportToMarkdown(t *testing.T) {
 								ReferencedTableName: "",
 								ConstraintTypes:     "",
 							},
+							{
+								ColumnName:          "ColumnName2",
+								ColumnDefault:       "ColumnDefault2",
+								IsNullable:          "IsNullable2",
+								ColumnType:          "ColumnType2",
+								Extra:               "Extra2",
+								Comment:             "",
+								ReferencedTableName: "",
+								ConstraintTypes:     "",
+							},
 						},
 					},
 					{
@@ -47,11 +57,11 @@ func TestExportToMarkdown(t *testing.T) {
 						Comment:   "",
 						Columns: []pipe.Column{
 							{
-								ColumnName:          "ColumnName2",
-								ColumnDefault:       "ColumnDefault2",
-								IsNullable:          "IsNullable2",
-								ColumnType:          "ColumnType2",
-								Extra:               "Extra2",
+								ColumnName:          "ColumnName1",
+								ColumnDefault:       "ColumnDefault1",
+								IsNullable:          "IsNullable1",
+								ColumnType:          "ColumnType1",
+								Extra:               "Extra1",
 								Comment:             "",
 								ReferencedTableName: "Table1",
 								ConstraintTypes:     "FOREIGN KEY",
