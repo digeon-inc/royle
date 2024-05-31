@@ -104,3 +104,16 @@ Github Actionの例は[こちら](https://github.com/digeon-inc/royle/blob/main/
 ### 正確性の確保
 
 royleはドキュメントを生成するときにmysqlのテーブル情報を毎回取得し、正確な情報を提供します。特に開発者がormを使っている場合、データベース上でテーブルがどのように表現されているかをormのドキュメントなしで正確に知ることができます。
+
+## アーキテクチャ
+
+本プログラムはパイプラインアーキテクチャを採用している。主な流れは下のようになる。
+
+```mermaid
+graph LR;
+    A[MySql] -->B[producer.FetchColumnMetadata];
+    A --->C[producer.FetchTableMetadata]
+    B -->D[transformer.MergeMetadataIntoTables];
+    C -->D
+    D -->E[consumer.ExportToMarkdown];
+```
