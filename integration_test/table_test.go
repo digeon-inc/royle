@@ -119,7 +119,7 @@ func TestFetchColumnMetadata(t *testing.T) {
 			}
 			t.Log(tableSource)
 
-			got := transformer.ConvertColumnMetadataToTableMetaData(columnSource,tableSource)
+			got := transformer.MergeMetadataIntoTables(columnSource,tableSource)
 			if !cmp.Equal(got, tt.want) {
 				t.Errorf("diff =%v", cmp.Diff(got, tt.want))
 			}

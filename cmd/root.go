@@ -42,7 +42,7 @@ var rootCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		tables := transformer.ConvertColumnMetadataToTableMetaData(columnSource,tableSource)
+		tables := transformer.MergeMetadataIntoTables(columnSource,tableSource)
 
 		if err = consumer.ExportToMarkdown(os.Stdout, Title(), tables); err != nil {
 			log.Fatal(err)

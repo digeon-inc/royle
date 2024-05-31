@@ -4,7 +4,7 @@ import "github.com/digeon-inc/royle/pipe"
 
 
 // columnsがテーブル順であることが前提
-func ConvertColumnMetadataToTableMetaData(cols []pipe.ColumnMetadata, tables []pipe.TableMetadata) []pipe.Table {
+func MergeMetadataIntoTables(cols []pipe.ColumnMetadata, tables []pipe.TableMetadata) []pipe.Table {
 	result := make([]pipe.Table, 0, 100)
 	currentTableName := ""
 	currentColumns := make([]pipe.Column, 0, 20)
