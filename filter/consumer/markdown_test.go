@@ -7,6 +7,7 @@ import (
 
 	"github.com/digeon-inc/royle/filter/consumer"
 	"github.com/digeon-inc/royle/pipe"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestExportToMarkdown(t *testing.T) {
@@ -88,8 +89,8 @@ func TestExportToMarkdown(t *testing.T) {
 				t.Fatalf("Failed to read actual output file: %v", err)
 			}
 
-			if string(expectedContent) != string(actualContent) {
-				t.Errorf("Mismatch between expected and actual output")
+			if diff := cmp.Diff(string(expectedContent), string(actualContent)); diff != "" {
+				t.Errorf("Mismatch between expected and actual output (-want +got):\n%s", diff)
 			}
 		})
 	}
