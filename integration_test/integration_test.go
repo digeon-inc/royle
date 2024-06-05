@@ -11,7 +11,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-func TestFetchColumnMetadata(t *testing.T) {
+func TestIntegration(t *testing.T) {
 	type args struct {
 		title  string
 		tables []pipe.Table
@@ -129,13 +129,8 @@ func TestFetchColumnMetadata(t *testing.T) {
 			if !cmp.Equal(gotTables, tt.args.tables) {
 				t.Errorf("diff =%v", cmp.Diff(gotTables, tt.args.tables))
 			}
-			// 期待される出力をファイルから読み取る
-			expectedContent, err := os.ReadFile("expected_output.md")
-			if err != nil {
-				t.Fatalf("Failed to read expected output file: %v", err)
-			}
 
-			// テスト対象の関数を実行し、ファイルに書き込む
+			// 生成したmdを書き込むファイルを作成する。
 			actualFile, err := os.Create("actual_output.md")
 			if err != nil {
 				t.Fatalf("Failed to create actual output file: %v", err)
@@ -148,12 +143,15 @@ func TestFetchColumnMetadata(t *testing.T) {
 				t.Fatalf("ExportToMarkdown error: %v", err)
 			}
 
-			// 期待される出力とファイルの内容を比較する
+			// 期待される出力と実際に書き込まれたファイルの内容を比較する。
+			expectedContent, err := os.ReadFile("expected_output.md")
+			if err != nil {
+				t.Fatalf("Failed to read expected output file: %v", err)
+			}
 			actualContent, err := os.ReadFile("actual_output.md")
 			if err != nil {
 				t.Fatalf("Failed to read actual output file: %v", err)
 			}
-
 			if diff := cmp.Diff(string(expectedContent), string(actualContent)); diff != "" {
 				t.Errorf("Mismatch between expected and actual output (-want +got):\n%s", diff)
 			}
