@@ -8,10 +8,6 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-
-
-
-
 func TestMergeMetadataIntoTables(t *testing.T) {
 	type args struct {
 		columns []pipe.ColumnMetadata
@@ -28,7 +24,7 @@ func TestMergeMetadataIntoTables(t *testing.T) {
 				// columnはテーブル順が必須である。
 				columns: []pipe.ColumnMetadata{
 					{
-						TableName: "TableName1",
+						TableName:           "TableName1",
 						ColumnName:          "ColumnName1-1",
 						ColumnDefault:       "ColumnDefault1-1",
 						IsNullable:          "IsNullable1-1",
@@ -39,7 +35,7 @@ func TestMergeMetadataIntoTables(t *testing.T) {
 						ConstraintTypes:     "",
 					},
 					{
-						TableName: "TableName1",
+						TableName:           "TableName1",
 						ColumnName:          "ColumnName1-2",
 						ColumnDefault:       "ColumnDefault1-2",
 						IsNullable:          "IsNullable1-2",
@@ -50,7 +46,7 @@ func TestMergeMetadataIntoTables(t *testing.T) {
 						ConstraintTypes:     "",
 					},
 					{
-						TableName: "TableName2",
+						TableName:           "TableName2",
 						ColumnName:          "ColumnName2",
 						ColumnDefault:       "ColumnDefault2",
 						IsNullable:          "IsNullable2",
@@ -61,7 +57,7 @@ func TestMergeMetadataIntoTables(t *testing.T) {
 						ConstraintTypes:     "ConstraintTypes2",
 					},
 					{
-						TableName: "TableName3",
+						TableName:           "TableName3",
 						ColumnName:          "ColumnName3",
 						ColumnDefault:       "ColumnDefault3",
 						IsNullable:          "IsNullable3",
@@ -75,15 +71,15 @@ func TestMergeMetadataIntoTables(t *testing.T) {
 				// tableは順不同。
 				tables: []pipe.TableMetadata{
 					{
-						TableName: "TableName3",
+						TableName:    "TableName3",
 						TableComment: "TableComment3",
 					},
 					{
-						TableName: "TableName1",
+						TableName:    "TableName1",
 						TableComment: "TableComment1",
 					},
 					{
-						TableName: "TableName2",
+						TableName:    "TableName2",
 						TableComment: "",
 					},
 				},

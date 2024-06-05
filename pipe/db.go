@@ -13,7 +13,6 @@ type ColumnMetadata struct {
 }
 
 type TableMetadata struct {
-    TableName   string
-    TableComment string
+	TableName    string
+	TableComment string
 }
-

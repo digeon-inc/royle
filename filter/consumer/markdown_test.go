@@ -21,7 +21,7 @@ func TestExportToMarkdown(t *testing.T) {
 		{
 			name: "success",
 			args: args{
-				title:  "MySQL documentation",
+				title: "MySQL documentation",
 				tables: []pipe.Table{
 					{
 						TableName: "Table1",
