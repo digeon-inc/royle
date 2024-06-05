@@ -1,7 +1,6 @@
 package consumer_test
 
 import (
-	"io"
 	"os"
 	"testing"
 
@@ -12,7 +11,6 @@ import (
 
 func TestExportToMarkdown(t *testing.T) {
 	type args struct {
-		output io.Writer
 		title  string
 		tables []pipe.Table
 	}
@@ -23,7 +21,6 @@ func TestExportToMarkdown(t *testing.T) {
 		{
 			name: "success",
 			args: args{
-				output: os.Stdout,
 				title:  "MySQL documentation",
 				tables: []pipe.Table{
 					{
