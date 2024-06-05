@@ -2,7 +2,7 @@
 
 ## 概要 
 
-本プログラムはパイプラインアーキテクチャを採用している。主な流れは下のようになる。
+本プログラムはパイプラインアーキテクチャを採用している。主な流れは下のようになる。[統合テスト](https://github.com/digeon-inc/royle/blob/main/integration_test/integration_test.go)で実際の流れを見ればより具体的に理解できる。
 
 ```mermaid
 graph LR;

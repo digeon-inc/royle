@@ -2,7 +2,7 @@ package pipe
 
 type Table struct {
 	TableName string
-	Comment string
+	Comment   string
 	Columns   []Column
 }
 
