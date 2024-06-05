@@ -2,7 +2,7 @@
 
 MYSQLドキュメントを生成するコマンドラインアプリケーション
 
-## Install
+## インストール
 
 ### golang
 
@@ -14,7 +14,7 @@ go install github.com/digeon-inc/royle@latest
 
 [バイナリのリリースノート](https://github.com/digeon-inc/royle/releases)
 
-## Usage
+## 使い方
 
 ### Linux or Mac
 
@@ -22,7 +22,7 @@ go install github.com/digeon-inc/royle@latest
 royle --host mysql --password password --port 3306 --user docker --database template > doc.md
 ```
 
-#### with pandoc
+#### pandocを使う
 
 [pandoc](https://pandoc.org/)と合わせて使えば様々なフォーマットに変換することができます。
 
@@ -37,7 +37,7 @@ royle --host mysql --password password --port 3306 --user docker --database temp
 royle --host mysql --password password --port 3306 --user docker --database template | Out-File -FilePath doc.md -Encoding utf8
 ```
 
-## Flags
+## コマンドのフラグ
 
 ### -h, --help
 コマンドについての説明
@@ -60,41 +60,45 @@ mysqlのユーザー (必須)
 ### -d, --database
 MYSQLのデータベース名 (必須)
 
-## Output example
+## ドキュメント生成例
 
-[example.sql](https://github.com/digeon-inc/royle/blob/main/example.sql)で作ったテーブルから生成した[ドキュメント](https://digeon-inc.github.io/royle/)
+[example.sql](https://github.com/digeon-inc/royle/blob/main/example.sql)で作ったテーブルから生成したマークダウンをpandocでhtmlにした[ドキュメント](https://digeon-inc.github.io/royle/)
 
-## Output columns
+## ドキュメントの各項目について
 
-### Name
+`##`に続く見出しはテーブル名である。また、その見出しのすぐ下にある説明はテーブルのコメントである。
+
+### 生成したドキュメントの表について
+
+#### Name
 カラムの名前。
 
-### TYPE
+#### TYPE
 カラムのデータ型。
 
-### Nullable
+#### Nullable
 カラムの NULL 値可能性。 この値は、NULL 値をカラムに格納できる場合は YES で、格納できない場合は NO
 
-### Constraints
+#### Constraints
 制約のタイプ。 値は、UNIQUE, PRIMARY KEY, FOREIGN KEY または (MySQL 8.0.16) CHECK
 
-### Referenced
+#### Referenced
 FOREIGN KEY が参照しているテーブルの名前。
 
-### Default
+#### Default
 カラムのデフォルト値。
 
-### Extra
+#### Extra
 カラムについての追加情報。
 - AUTO_INCREMENT 属性
 - ON UPDATE CURRENT_TIMESTAMP 属性
 - 生成されたカラムの STORED GENERATED または VIRTUAL GENERATED
 - 式のデフォルト値を持つカラムの DEFAULT_GENERATED
 
-### Comment
-カラムについてのコメント。
+#### Comment
+カラムのコメント。
 
-## Why?
+## モチベーション
 
 ### 自動化による効率化
 
@@ -104,16 +108,3 @@ Github Actionの例は[こちら](https://github.com/digeon-inc/royle/blob/main/
 ### 正確性の確保
 
 royleはドキュメントを生成するときにmysqlのテーブル情報を毎回取得し、正確な情報を提供します。特に開発者がormを使っている場合、データベース上でテーブルがどのように表現されているかをormのドキュメントなしで正確に知ることができます。
-
-## アーキテクチャ
-
-本プログラムはパイプラインアーキテクチャを採用している。主な流れは下のようになる。
-
-```mermaid
-graph LR;
-    A[MySql] -->B[producer.FetchColumnMetadata];
-    A --->C[producer.FetchTableMetadata]
-    B -->D[transformer.MergeMetadataIntoTables];
-    C -->D
-    D -->E[consumer.ExportToMarkdown];
-```
