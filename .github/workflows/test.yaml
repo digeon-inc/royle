@@ -1,4 +1,4 @@
-name: Go Test with MySQL
+name: Go Lint and Test with MySQL
 
 on:
   pull_request:
@@ -7,6 +7,25 @@ on:
       - main
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.19
+
+      - name: Install dependencies
+        run: go mod download
+
+      - name: Run lint
+        run: make lint
+
+
   test:
     runs-on: ubuntu-latest
 
