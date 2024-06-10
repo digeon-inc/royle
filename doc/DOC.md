@@ -8,7 +8,7 @@
 graph LR;
     A[producer.FetchColumnMetadata] -->C[transformer.MergeMetadataIntoTables];
     B[producer.FetchTableMetadata] -->C;
-    C -->D[transformer.SortColumnByGormModelFile(optional)];
+    C -->D[transformer.SortColumnByGormModelFile（optional）];
     D -->E[consumer.ExportToMarkdown];
 ```
 
