@@ -19,7 +19,7 @@ go install github.com/digeon-inc/royle@latest
 ### Linux or Mac
 
 ```bash
-royle --host mysql --password password --port 3306 --user docker --database template > doc.md
+royle --host mysql --password password --port 3306 --user docker --database template -x "path/to/gorm/dir1 path/to/gorm/dir2" > doc.md
 ```
 
 #### pandocを使う
@@ -42,6 +42,9 @@ royle --host mysql --password password --port 3306 --user docker --database temp
 ### -h, --help
 コマンドについての説明
 
+### -x, --dirs
+gormファイルがあるディレクトリのパス。指定することでファイル内で宣言したカラム順になる。
+
 ### -t, --title
 ドキュメントのタイトル (default "ROYLE")
 
@@ -59,6 +62,8 @@ mysqlのユーザー (必須)
 
 ### -d, --database
 MYSQLのデータベース名 (必須)
+
+
 
 ## ドキュメント生成例
 
@@ -108,3 +113,7 @@ Github Actionの例は[こちら](https://github.com/digeon-inc/royle/blob/main/
 ### 正確性の確保
 
 royleはドキュメントを生成するときにmysqlのテーブル情報を毎回取得し、正確な情報を提供します。特に開発者がormを使っている場合、データベース上でテーブルがどのように表現されているかをormのドキュメントなしで正確に知ることができます。
+
+## document
+
+[コードについて](https://github.com/digeon-inc/royle/blob/main/doc/DOC.md)

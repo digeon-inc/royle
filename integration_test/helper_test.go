@@ -6,7 +6,11 @@ import (
 	"log"
 	"os"
 
+	another_testdata "github.com/digeon-inc/royle/integration_test/another_test_data"
+	testdata "github.com/digeon-inc/royle/integration_test/test_data"
 	_ "github.com/go-sql-driver/mysql"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 var (
@@ -14,34 +18,19 @@ var (
 )
 
 func init() {
-	db, err := sql.Open("mysql", DSN())
+
+	db, err := gorm.Open(mysql.Open(DSN()), &gorm.Config{})
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
 
-	createUsersTableSQL := `
-	CREATE TABLE IF NOT EXISTS users (
-		id INT AUTO_INCREMENT PRIMARY KEY,
-		name VARCHAR(255) NOT NULL,
-		email VARCHAR(255) NOT NULL UNIQUE
-	) COMMENT='Stores basic information about users';
-	`
-
-	if _, err = db.Exec(createUsersTableSQL); err != nil {
+	// テーブルを自動的に作成または更新する
+	err = db.Set("gorm:table_options", "COMMENT='Stores basic information about users'").AutoMigrate(&testdata.Users{})
+	if err != nil {
 		log.Fatal(err)
 	}
-
-	createOrdersTableSQL := `
-	CREATE TABLE IF NOT EXISTS orders (
-		id INT AUTO_INCREMENT PRIMARY KEY,
-		product_name VARCHAR(255) NOT NULL,
-		user_id INT,
-		quantity INT DEFAULT 1 COMMENT 'Quantity of the product being ordered, defaults to 1',
-		FOREIGN KEY (user_id) REFERENCES users(id)
-	) COMMENT='Stores basic information about orders';
-	`
-	if _, err = db.Exec(createOrdersTableSQL); err != nil {
+	err = db.Set("gorm:table_options", "COMMENT='Stores basic information about orders'").AutoMigrate(&another_testdata.Orders{})
+	if err != nil {
 		log.Fatal(err)
 	}
 

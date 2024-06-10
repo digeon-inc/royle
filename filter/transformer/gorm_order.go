@@ -2,6 +2,7 @@ package transformer
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -9,6 +10,7 @@ import (
 	"sync"
 
 	"github.com/digeon-inc/royle/pipe"
+	"github.com/iancoleman/strcase"
 )
 
 func SortColumnByGormModelFile(tables []pipe.Table, dirs []string) ([]pipe.Table, error) {
@@ -16,8 +18,7 @@ func SortColumnByGormModelFile(tables []pipe.Table, dirs []string) ([]pipe.Table
 	var err error
 
 	for _, dir := range dirs {
-		paths, err = getFilePaths(dir, paths)
-		if err != nil {
+		if paths, err = getFilePaths(dir, paths); err != nil {
 			return nil, err
 		}
 	}
@@ -33,14 +34,13 @@ func SortColumnByGormModelFile(tables []pipe.Table, dirs []string) ([]pipe.Table
 			table := &tables[i]
 			filePath, ok := paths[table.TableName]
 			if !ok {
-				// 指定したテーブルのファイルがない場合はログを出力して、ソートせずにスルーする
-				fmt.Printf("No matching file found for table: %s\n", table.TableName)
+				// テーブルのファイルがない場合はログを出力して、ソートせずにスルーする
+				log.Printf("No matching file found for table: %s\n", table.TableName)
 				return
 			}
 
 			content, err := os.ReadFile(filePath)
 			if err != nil {
-				// あるはずのファイルがないのでエラーとして返す。
 				mu.Lock()
 				resultErr = err
 				mu.Unlock()
@@ -49,8 +49,8 @@ func SortColumnByGormModelFile(tables []pipe.Table, dirs []string) ([]pipe.Table
 
 			fieldNames, err := parseStructFields(string(content))
 			if err != nil {
-				// structがない場合はログを出力して、ソートせずにスルーする
-				fmt.Printf("%s: %s\n", table.TableName, err.Error())
+				// ファイル内にstructがない(modelが宣言されてない)場合はログを出力して、ソートせずにスルーする
+				log.Printf("Error parsing struct for table %s: %s\n", table.TableName, err.Error())
 				return
 			}
 
@@ -66,20 +66,18 @@ func SortColumnByGormModelFile(tables []pipe.Table, dirs []string) ([]pipe.Table
 				}
 			}
 
-			// mysqlのデータベース内だけに存在する、つまりファイルに書かれてないカラムは最後に追加する。
+			// mysqlのデータベース内だけに存在する(ファイルに書かれてないカラム)は最後に追加する。
 			ExistReorderedMap := make(map[string]bool)
 			for _, column := range reorderedColumns {
 				ExistReorderedMap[column.ColumnName] = true
 			}
 			for _, column := range table.Columns {
-				if _, ok := ExistReorderedMap[column.ColumnName]; !ok {
+				if _, exist := ExistReorderedMap[column.ColumnName]; !exist {
 					reorderedColumns = append(reorderedColumns, column)
 				}
 			}
 
-			mu.Lock()
 			table.Columns = reorderedColumns
-			mu.Unlock()
 		}(i)
 	}
 
@@ -103,36 +101,11 @@ func parseStructFields(fileContent string) ([]string, error) {
 	var fields []string
 	for _, match := range fieldMatches {
 		if len(match) > 1 {
-			fields = append(fields, camelToSnake(match[1]))
+			fields = append(fields, strcase.ToSnake(match[1]))
 		}
 	}
 
 	return fields, nil
-}
-
-func camelToSnake(s string) string {
-	if s == "" {
-		return s
-	}
-
-	delimiter := "_"
-	sLen := len(s)
-	var snake string
-	for i, current := range s {
-		if i > 0 && i+1 < sLen {
-			if current >= 'A' && current <= 'Z' {
-				next := s[i+1]
-				prev := s[i-1]
-				if (next >= 'a' && next <= 'z') || (prev >= 'a' && prev <= 'z') {
-					snake += delimiter
-				}
-			}
-		}
-		snake += string(current)
-	}
-
-	snake = strings.ToLower(snake)
-	return snake
 }
 
 func getFilePaths(dir string, paths map[string]string) (map[string]string, error) {

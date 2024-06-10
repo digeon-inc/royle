@@ -21,6 +21,7 @@ var (
 	dbHost     string
 	dbPort     string
 	database   string
+	dirs       []string
 )
 
 var rootCmd = &cobra.Command{
@@ -33,13 +34,13 @@ var rootCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 		defer db.Close()
-		
+
 		var (
 			columnSource []pipe.ColumnMetadata
 			tableSource  []pipe.TableMetadata
 			wg           sync.WaitGroup
 		)
-	
+
 		// ゴルーチンの開始
 		wg.Add(2)
 		go func() {
@@ -50,7 +51,7 @@ var rootCmd = &cobra.Command{
 				log.Fatal(err)
 			}
 		}()
-	
+
 		go func() {
 			defer wg.Done()
 			var err error
@@ -59,11 +60,19 @@ var rootCmd = &cobra.Command{
 				log.Fatal(err)
 			}
 		}()
-	
+
 		// すべてのゴルーチンの終了を待つ
 		wg.Wait()
 
-		tables := transformer.MergeMetadataIntoTables(columnSource,tableSource)
+		tables := transformer.MergeMetadataIntoTables(columnSource, tableSource)
+
+		// ディレクトリが指定されている場合のみ、カラムをソート
+		if len(dirs) > 0 {
+			tables, err = transformer.SortColumnByGormModelFile(tables, dirs)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
 
 		if err = consumer.ExportToMarkdown(os.Stdout, Title(), tables); err != nil {
 			log.Fatal(err)
@@ -80,6 +89,8 @@ func Execute() {
 
 func init() {
 	rootCmd.Flags().StringVarP(&title, "title", "t", "ROYLE", "document title")
+
+	rootCmd.Flags().StringSliceVarP(&dirs, "dirs", "x", nil, "directories to search for GORM model files")
 
 	rootCmd.Flags().StringVarP(&dbUser, "user", "u", "", "mysql user")
 	if err := rootCmd.MarkFlagRequired("user"); err != nil {
