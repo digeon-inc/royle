@@ -215,7 +215,7 @@ func TestIntegration(t *testing.T) {
 				t.Errorf("diff =%v", cmp.Diff(gotTables, tt.wantTables))
 			}
 
-			gotSortedTables, err := transformer.SortColumnByGormModelFile(gotTables, []string{"./testdata", "./another_test_data"})
+			gotSortedTables, err := transformer.SortColumnByGormModelFile(gotTables, []string{"testdata", "another_test_data"})
 			if err != nil {
 				t.Errorf("SortColumnByGormModelFile error = %v", err)
 			}
