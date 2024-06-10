@@ -30,7 +30,7 @@ FetchTableMetadataでは、**テーブル**についての情報をmysqlデー�
 
 MergeMetadataIntoTablesでは、FetchColumnMetadataとFetchTableMetadataから取得したテーブルとカラムについての情報をカラム名をkeyとして結合している。単一のsqlでテーブル情報とカラム情報を結合しなかった理由は、メンテナンス性が下がるからだ。単一のsqlでやってしまうとどうしても文が長くなり、単一責任の原則にも反してまい可読性が悪化する。
 
-### SortColumnByGormModelFile
+#### SortColumnByGormModelFile (optional)
 
 SortColumnByGormModelFileでは指定されたディレクトリ（複数可）内のファイル（複数可）に宣言されたgormのmodelを読み込み、そのモデルのカラム順になるようにカラムをソートする。宣言されてないカラムはソートされたカラムの後に追加される。また、ファイルがないテーブルのカラムはソートされない。
 
