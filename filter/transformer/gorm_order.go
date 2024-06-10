@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"sync"
 
 	"github.com/digeon-inc/royle/pipe"
 )
@@ -21,54 +22,70 @@ func SortColumnByGormModelFile(tables []pipe.Table, dirs []string) ([]pipe.Table
 		}
 	}
 
-	for i, table := range tables {
-		filePath, ok := paths[table.TableName]
-		if !ok {
-			// 指定したテーブルのファイルがない場合はログを出力して、ソートせずにスルーする
-			fmt.Printf("No matching file found for table: %s\n", table.TableName)
-			continue
-		}
+	var wg sync.WaitGroup
+	var mu sync.Mutex
+	var resultErr error
 
-		content, err := os.ReadFile(filePath)
-		if err != nil {
-			// あるはずのファイルがないのでエラーとして返す。
-			return nil, err
-		}
-
-		fieldNames, err := parseStructFields(string(content))
-		if err != nil {
-			// structがない場合はログを出力して、ソートせずにスルーする
-			fmt.Printf("%s: %s\n", table.TableName, err.Error())
-			continue
-		}
-
-		columnMap := make(map[string]pipe.Column)
-		for _, column := range table.Columns {
-			columnMap[column.ColumnName] = column
-		}
-
-		var reorderedColumns []pipe.Column
-		for _, fieldName := range fieldNames {
-			if column, ok := columnMap[fieldName]; ok {
-				reorderedColumns = append(reorderedColumns, column)
+	for i := range tables {
+		wg.Add(1)
+		go func(i int) {
+			defer wg.Done()
+			table := &tables[i]
+			filePath, ok := paths[table.TableName]
+			if !ok {
+				// 指定したテーブルのファイルがない場合はログを出力して、ソートせずにスルーする
+				fmt.Printf("No matching file found for table: %s\n", table.TableName)
+				return
 			}
-		}
 
-		// mysqlのデータベース内だけに存在する、つまりファイルに書かれてないカラムは最後に追加する。
-		ExistReorderedMap := make(map[string]bool)
-		for _, column := range reorderedColumns {
-			ExistReorderedMap[column.ColumnName] = true
-		}
-		for _, column := range table.Columns {
-			if _, ok := ExistReorderedMap[column.ColumnName]; !ok {
-				reorderedColumns = append(reorderedColumns, column)
+			content, err := os.ReadFile(filePath)
+			if err != nil {
+				// あるはずのファイルがないのでエラーとして返す。
+				mu.Lock()
+				resultErr = err
+				mu.Unlock()
+				return
 			}
-		}
 
-		tables[i].Columns = reorderedColumns
+			fieldNames, err := parseStructFields(string(content))
+			if err != nil {
+				// structがない場合はログを出力して、ソートせずにスルーする
+				fmt.Printf("%s: %s\n", table.TableName, err.Error())
+				return
+			}
+
+			columnMap := make(map[string]pipe.Column)
+			for _, column := range table.Columns {
+				columnMap[column.ColumnName] = column
+			}
+
+			var reorderedColumns []pipe.Column
+			for _, fieldName := range fieldNames {
+				if column, ok := columnMap[fieldName]; ok {
+					reorderedColumns = append(reorderedColumns, column)
+				}
+			}
+
+			// mysqlのデータベース内だけに存在する、つまりファイルに書かれてないカラムは最後に追加する。
+			ExistReorderedMap := make(map[string]bool)
+			for _, column := range reorderedColumns {
+				ExistReorderedMap[column.ColumnName] = true
+			}
+			for _, column := range table.Columns {
+				if _, ok := ExistReorderedMap[column.ColumnName]; !ok {
+					reorderedColumns = append(reorderedColumns, column)
+				}
+			}
+
+			mu.Lock()
+			table.Columns = reorderedColumns
+			mu.Unlock()
+		}(i)
 	}
 
-	return tables, nil
+	wg.Wait()
+
+	return tables, resultErr
 }
 
 func parseStructFields(fileContent string) ([]string, error) {
