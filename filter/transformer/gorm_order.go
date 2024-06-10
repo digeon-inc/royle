@@ -82,29 +82,43 @@ func SortColumnByGorm(tables []pipe.Table, dir string) ([]pipe.Table, error) {
 	for i, table := range tables {
 		filePath, ok := paths[table.TableName]
 		if !ok {
-			// マッチするテーブルがない場合はログを出力してスルーする
+			// 指定したテーブルのファイルがない場合はログを出力して、ソートせずにスルーする
 			fmt.Printf("No matching file found for table: %s\n", table.TableName)
 			continue
 		}
 
 		content, err := os.ReadFile(filePath)
 		if err != nil {
+			// あるはずのファイルがないのでエラーとして返す。
 			return nil, err
 		}
 
 		fieldNames, err := parseStructFields(string(content))
 		if err != nil {
-			return nil, err
+			// structがない場合はログを出力して、ソートせずにスルーする
+			fmt.Printf("%s: %s\n", table.TableName, err.Error())
+			continue
 		}
 
 		columnMap := make(map[string]pipe.Column)
 		for _, column := range table.Columns {
-			columnMap[strings.ToLower(column.ColumnName)] = column
+			columnMap[column.ColumnName] = column
 		}
 
 		var reorderedColumns []pipe.Column
 		for _, fieldName := range fieldNames {
 			if column, ok := columnMap[fieldName]; ok {
+				reorderedColumns = append(reorderedColumns, column)
+			}
+		}
+
+		// ファイルに書かれてないカラムは最後に追加する
+		ExistReorderedMap := make(map[string]bool)
+		for _, column := range reorderedColumns {
+			ExistReorderedMap[column.ColumnName] = true
+		}
+		for _, column := range table.Columns {
+			if _, ok := ExistReorderedMap[column.ColumnName]; !ok {
 				reorderedColumns = append(reorderedColumns, column)
 			}
 		}

@@ -34,11 +34,19 @@ func TestSortColumnByGorm(t *testing.T) {
 								ColumnType: "time.Time",
 							},
 							{
+								ColumnName: "mysql_only",
+								ColumnType: "string",
+							},
+							{
 								ColumnName: "email_to_update",
 								ColumnType: "string",
 							},
 							{
 								ColumnName: "hashed_password",
+								ColumnType: "string",
+							},
+							{
+								ColumnName: "mysql_only2",
 								ColumnType: "string",
 							},
 							{
@@ -124,6 +132,14 @@ func TestSortColumnByGorm(t *testing.T) {
 							{
 								ColumnName: "deleted_at",
 								ColumnType: "time.Time",
+							},
+							{
+								ColumnName: "mysql_only",
+								ColumnType: "string",
+							},
+							{
+								ColumnName: "mysql_only2",
+								ColumnType: "string",
 							},
 						},
 					},
