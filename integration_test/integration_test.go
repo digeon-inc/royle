@@ -16,9 +16,10 @@ func TestIntegration(t *testing.T) {
 		title string
 	}
 	tests := []struct {
-		name       string
-		args       args
-		wantTables []pipe.Table
+		name             string
+		args             args
+		wantTables       []pipe.Table
+		wantSortedTables []pipe.Table
 	}{
 		{
 			name: "success",
@@ -109,6 +110,90 @@ func TestIntegration(t *testing.T) {
 					},
 				},
 			},
+			wantSortedTables: []pipe.Table{
+				{
+					TableName: "orders",
+					Comment:   "Stores basic information about orders",
+					Columns: []pipe.Column{
+						{
+							ColumnName:          "id",
+							ColumnDefault:       "",
+							IsNullable:          "NO",
+							ColumnType:          "int",
+							Extra:               "auto_increment",
+							Comment:             "",
+							ReferencedTableName: "",
+							ConstraintTypes:     "PRIMARY KEY",
+						},
+						{
+							ColumnName:          "product_name",
+							ColumnDefault:       "",
+							IsNullable:          "NO",
+							ColumnType:          "varchar(255)",
+							Extra:               "",
+							Comment:             "",
+							ReferencedTableName: "",
+							ConstraintTypes:     "",
+						},
+						{
+							ColumnName:          "user_id",
+							ColumnDefault:       "",
+							IsNullable:          "YES",
+							ColumnType:          "int",
+							Extra:               "",
+							Comment:             "",
+							ReferencedTableName: "users",
+							ConstraintTypes:     "FOREIGN KEY",
+						},
+						{
+							ColumnName:          "quantity",
+							ColumnDefault:       "1",
+							IsNullable:          "YES",
+							ColumnType:          "int",
+							Extra:               "",
+							Comment:             "Quantity of the product being ordered, defaults to 1",
+							ReferencedTableName: "",
+							ConstraintTypes:     "",
+						},
+					},
+				},
+				{
+					TableName: "users",
+					Comment:   "Stores basic information about users",
+					Columns: []pipe.Column{
+						{
+							ColumnName:          "id",
+							ColumnDefault:       "",
+							IsNullable:          "NO",
+							ColumnType:          "int",
+							Extra:               "auto_increment",
+							Comment:             "",
+							ReferencedTableName: "",
+							ConstraintTypes:     "PRIMARY KEY",
+						},
+						{
+							ColumnName:          "name",
+							ColumnDefault:       "",
+							IsNullable:          "NO",
+							ColumnType:          "varchar(255)",
+							Extra:               "",
+							Comment:             "",
+							ReferencedTableName: "",
+							ConstraintTypes:     "",
+						},
+						{
+							ColumnName:          "email",
+							ColumnDefault:       "",
+							IsNullable:          "NO",
+							ColumnType:          "varchar(255)",
+							Extra:               "",
+							Comment:             "",
+							ReferencedTableName: "",
+							ConstraintTypes:     "UNIQUE",
+						},
+					},
+				},
+			},
 		},
 	}
 	for _, tt := range tests {
@@ -130,6 +215,14 @@ func TestIntegration(t *testing.T) {
 				t.Errorf("diff =%v", cmp.Diff(gotTables, tt.wantTables))
 			}
 
+			gotSortedTables, err := transformer.SortColumnByGormModelFile(gotTables, []string{"./testdata", "./another_test_data"})
+			if err != nil {
+				t.Errorf("SortColumnByGormModelFile error = %v", err)
+			}
+			if !cmp.Equal(gotSortedTables, tt.wantSortedTables) {
+				t.Errorf("diff =%v", cmp.Diff(gotSortedTables, tt.wantSortedTables))
+			}
+
 			// 生成したmdを書き込むファイルを作成する。
 			actualFile, err := os.Create("actual_output.md")
 			if err != nil {
@@ -138,7 +231,7 @@ func TestIntegration(t *testing.T) {
 			defer os.Remove("actual_output.md")
 			defer actualFile.Close()
 
-			err = consumer.ExportToMarkdown(actualFile, tt.args.title, gotTables)
+			err = consumer.ExportToMarkdown(actualFile, tt.args.title, gotSortedTables)
 			if err != nil {
 				t.Fatalf("ExportToMarkdown error: %v", err)
 			}
