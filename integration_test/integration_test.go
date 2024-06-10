@@ -13,101 +13,101 @@ import (
 
 func TestIntegration(t *testing.T) {
 	type args struct {
-		title  string
-		tables []pipe.Table
+		title string
 	}
 	tests := []struct {
-		name string
-		args args
+		name       string
+		args       args
+		wantTables []pipe.Table
 	}{
 		{
 			name: "success",
 			args: args{
-				tables: []pipe.Table{
-					{
-						TableName: "orders",
-						Comment:   "Stores basic information about orders",
-						Columns: []pipe.Column{
-							{
-								ColumnName:          "id",
-								ColumnDefault:       "",
-								IsNullable:          "NO",
-								ColumnType:          "int",
-								Extra:               "auto_increment",
-								Comment:             "",
-								ReferencedTableName: "",
-								ConstraintTypes:     "PRIMARY KEY",
-							},
-							{
-								ColumnName:          "product_name",
-								ColumnDefault:       "",
-								IsNullable:          "NO",
-								ColumnType:          "varchar(255)",
-								Extra:               "",
-								Comment:             "",
-								ReferencedTableName: "",
-								ConstraintTypes:     "",
-							},
-							{
-								ColumnName:          "quantity",
-								ColumnDefault:       "1",
-								IsNullable:          "YES",
-								ColumnType:          "int",
-								Extra:               "",
-								Comment:             "Quantity of the product being ordered, defaults to 1",
-								ReferencedTableName: "",
-								ConstraintTypes:     "",
-							},
-							{
-								ColumnName:          "user_id",
-								ColumnDefault:       "",
-								IsNullable:          "YES",
-								ColumnType:          "int",
-								Extra:               "",
-								Comment:             "",
-								ReferencedTableName: "users",
-								ConstraintTypes:     "FOREIGN KEY",
-							},
+				title: "MySQL documentation",
+			},
+			wantTables: []pipe.Table{
+				{
+					TableName: "orders",
+					Comment:   "Stores basic information about orders",
+					Columns: []pipe.Column{
+						{
+							ColumnName:          "id",
+							ColumnDefault:       "",
+							IsNullable:          "NO",
+							ColumnType:          "int",
+							Extra:               "auto_increment",
+							Comment:             "",
+							ReferencedTableName: "",
+							ConstraintTypes:     "PRIMARY KEY",
 						},
-					},
-					{
-						TableName: "users",
-						Comment:   "Stores basic information about users",
-						Columns: []pipe.Column{
-							{
-								ColumnName:          "email",
-								ColumnDefault:       "",
-								IsNullable:          "NO",
-								ColumnType:          "varchar(255)",
-								Extra:               "",
-								Comment:             "",
-								ReferencedTableName: "",
-								ConstraintTypes:     "UNIQUE",
-							},
-							{
-								ColumnName:          "id",
-								ColumnDefault:       "",
-								IsNullable:          "NO",
-								ColumnType:          "int",
-								Extra:               "auto_increment",
-								Comment:             "",
-								ReferencedTableName: "",
-								ConstraintTypes:     "PRIMARY KEY",
-							},
-							{
-								ColumnName:          "name",
-								ColumnDefault:       "",
-								IsNullable:          "NO",
-								ColumnType:          "varchar(255)",
-								Extra:               "",
-								Comment:             "",
-								ReferencedTableName: "",
-								ConstraintTypes:     "",
-							},
+						{
+							ColumnName:          "product_name",
+							ColumnDefault:       "",
+							IsNullable:          "NO",
+							ColumnType:          "varchar(255)",
+							Extra:               "",
+							Comment:             "",
+							ReferencedTableName: "",
+							ConstraintTypes:     "",
+						},
+						{
+							ColumnName:          "quantity",
+							ColumnDefault:       "1",
+							IsNullable:          "YES",
+							ColumnType:          "int",
+							Extra:               "",
+							Comment:             "Quantity of the product being ordered, defaults to 1",
+							ReferencedTableName: "",
+							ConstraintTypes:     "",
+						},
+						{
+							ColumnName:          "user_id",
+							ColumnDefault:       "",
+							IsNullable:          "YES",
+							ColumnType:          "int",
+							Extra:               "",
+							Comment:             "",
+							ReferencedTableName: "users",
+							ConstraintTypes:     "FOREIGN KEY",
 						},
 					},
 				},
-				title: "MySQL documentation",
+				{
+					TableName: "users",
+					Comment:   "Stores basic information about users",
+					Columns: []pipe.Column{
+						{
+							ColumnName:          "email",
+							ColumnDefault:       "",
+							IsNullable:          "NO",
+							ColumnType:          "varchar(255)",
+							Extra:               "",
+							Comment:             "",
+							ReferencedTableName: "",
+							ConstraintTypes:     "UNIQUE",
+						},
+						{
+							ColumnName:          "id",
+							ColumnDefault:       "",
+							IsNullable:          "NO",
+							ColumnType:          "int",
+							Extra:               "auto_increment",
+							Comment:             "",
+							ReferencedTableName: "",
+							ConstraintTypes:     "PRIMARY KEY",
+						},
+						{
+							ColumnName:          "name",
+							ColumnDefault:       "",
+							IsNullable:          "NO",
+							ColumnType:          "varchar(255)",
+							Extra:               "",
+							Comment:             "",
+							ReferencedTableName: "",
+							ConstraintTypes:     "",
+						},
+					},
+				},
 			},
 		},
 	}
@@ -126,8 +126,8 @@ func TestIntegration(t *testing.T) {
 			t.Log(tableSource)
 
 			gotTables := transformer.MergeMetadataIntoTables(columnSource, tableSource)
-			if !cmp.Equal(gotTables, tt.args.tables) {
-				t.Errorf("diff =%v", cmp.Diff(gotTables, tt.args.tables))
+			if !cmp.Equal(gotTables, tt.wantTables) {
+				t.Errorf("diff =%v", cmp.Diff(gotTables, tt.wantTables))
 			}
 
 			// 生成したmdを書き込むファイルを作成する。
