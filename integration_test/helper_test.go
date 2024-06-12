@@ -24,8 +24,11 @@ func init() {
 		log.Fatal(err)
 	}
 
-	// テーブルを自動的に作成または更新する
 	err = db.Set("gorm:table_options", "COMMENT='Stores basic information about users'").AutoMigrate(&testdata.Users{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = db.Set("gorm:table_options", "COMMENT='Stores basic information about users details'").AutoMigrate(&testdata.UserDetail{})
 	if err != nil {
 		log.Fatal(err)
 	}

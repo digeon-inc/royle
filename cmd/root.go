@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"os"
+	"strings"
 	"sync"
 
 	"github.com/digeon-inc/royle/filter/consumer"
@@ -12,16 +13,22 @@ import (
 	"github.com/digeon-inc/royle/pipe"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/spf13/cobra"
+	"gorm.io/gorm/schema"
 )
 
 var (
-	title      string
-	dbUser     string
-	dbPassword string
-	dbHost     string
-	dbPort     string
-	database   string
-	dirs       []string
+	title               string
+	dbUser              string
+	dbPassword          string
+	dbHost              string
+	dbPort              string
+	database            string
+	dirs                []string
+	tablePrefix         string
+	singularTable       bool
+	replaceList         []string
+	noLowerCase         bool
+	identifierMaxLength int
 )
 
 var rootCmd = &cobra.Command{
@@ -68,7 +75,16 @@ var rootCmd = &cobra.Command{
 
 		// ディレクトリが指定されている場合のみ、カラムをソート
 		if len(dirs) > 0 {
-			tables, err = transformer.SortColumnByGormModelFile(tables, dirs)
+			// テーブル名&カラム名の設定
+			var namer = schema.NamingStrategy{
+				TablePrefix:         tablePrefix,
+				SingularTable:       singularTable,
+				NameReplacer:        strings.NewReplacer(replaceList...),
+				NoLowerCase:         noLowerCase,
+				IdentifierMaxLength: identifierMaxLength,
+			}
+
+			tables, err = transformer.SortColumnByGormModelFile(namer, tables, dirs)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -116,4 +132,11 @@ func init() {
 	if err := rootCmd.MarkFlagRequired("database"); err != nil {
 		log.Fatal(err)
 	}
+
+	// gormのnamerの初期値
+	rootCmd.Flags().StringVar(&tablePrefix, "table-prefix", "", "Table prefix")
+	rootCmd.Flags().BoolVar(&singularTable, "singular-table", false, "Whether to use singular table names")
+	rootCmd.Flags().StringSliceVar(&replaceList, "replace-list", nil, "String replacer for table and column names")
+	rootCmd.Flags().BoolVar(&noLowerCase, "no-lowercase", false, "Whether to use lower case in identifiers")
+	rootCmd.Flags().IntVar(&identifierMaxLength, "identifier-max-length", 64, "Maximum length for identifiers")
 }
