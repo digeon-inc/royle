@@ -690,6 +690,140 @@ func TestSortColumnByGorm(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "success （ファイル内に複数のモデルがある場合）",
+			args: args{
+				tables: []pipe.Table{
+					{
+						TableName: "regions",
+						Comment:   "regions comment",
+						Columns: []pipe.Column{
+							{
+								ColumnName: "country",
+								ColumnType: "string",
+							},
+							{
+								ColumnName: "region_id",
+								ColumnType: "int",
+							},
+							{
+								ColumnName: "region_name",
+								ColumnType: "string",
+							},
+						},
+					},
+					{
+						TableName: "shippers",
+						Comment:   "shippers comment",
+						Columns: []pipe.Column{
+							{
+								ColumnName: "phone",
+								ColumnType: "string",
+							},
+							{
+								ColumnName: "shipper_id",
+								ColumnType: "int",
+							},
+							{
+								ColumnName: "shipper_name",
+								ColumnType: "string",
+							},
+						},
+					},
+					{
+						TableName: "orders",
+						Comment:   "orders comment",
+						Columns: []pipe.Column{
+							{
+								ColumnName: "total_amount",
+								ColumnType: "string",
+							},
+							{
+								ColumnName: "order_id",
+								ColumnType: "string",
+							},
+							{
+								ColumnName: "created_at",
+								ColumnType: "time.Time",
+							},
+							{
+								ColumnName: "deleted_at",
+								ColumnType: "gorm.DeletedAt",
+							},
+							{
+								ColumnName: "updated_at",
+								ColumnType: "time.Time",
+							},
+						},
+					},
+				},
+				dirs: []string{"test_data", "another_test_data"},
+			},
+			want: []pipe.Table{
+				{
+					TableName: "regions",
+					Comment:   "regions comment",
+					Columns: []pipe.Column{
+						{
+							ColumnName: "region_id",
+							ColumnType: "int",
+						},
+						{
+							ColumnName: "region_name",
+							ColumnType: "string",
+						},
+						{
+							ColumnName: "country",
+							ColumnType: "string",
+						},
+					},
+				},
+				{
+					TableName: "shippers",
+					Comment:   "shippers comment",
+					Columns: []pipe.Column{
+						{
+							ColumnName: "shipper_id",
+							ColumnType: "int",
+						},
+						{
+							ColumnName: "shipper_name",
+							ColumnType: "string",
+						},
+						{
+							ColumnName: "phone",
+							ColumnType: "string",
+						},
+					},
+				},
+				{
+					TableName: "orders",
+					Comment:   "orders comment",
+					Columns: []pipe.Column{
+						{
+							ColumnName: "order_id",
+							ColumnType: "string",
+						},
+						{
+							ColumnName: "total_amount",
+							ColumnType: "string",
+						},
+						{
+							ColumnName: "created_at",
+							ColumnType: "time.Time",
+						},
+						{
+							ColumnName: "updated_at",
+							ColumnType: "time.Time",
+						},
+						{
+							ColumnName: "deleted_at",
+							ColumnType: "gorm.DeletedAt",
+						},
+					},
+				},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

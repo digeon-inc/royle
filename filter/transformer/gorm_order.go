@@ -10,10 +10,11 @@ import (
 	"sync"
 
 	"github.com/digeon-inc/royle/pipe"
-	"github.com/iancoleman/strcase"
+	"gorm.io/gorm/schema"
 )
 
-func SortColumnByGormModelFile(tables []pipe.Table, dirs []string) ([]pipe.Table, error) {
+func SortColumnByGormModelFile(namer schema.Namer, tables []pipe.Table, dirs []string) ([]pipe.Table, error) {
+
 	paths := make(map[string]string)
 	var err error
 
@@ -47,7 +48,7 @@ func SortColumnByGormModelFile(tables []pipe.Table, dirs []string) ([]pipe.Table
 				return
 			}
 
-			fieldNames, err := parseStructFields(string(content))
+			fieldNames, err := parseStructFields(namer, string(content))
 			if err != nil {
 				// ファイル内にstructがない(modelが宣言されてない)場合はログを出力して、ソートせずにスルーする
 				log.Printf("Error parsing struct for table %s: %s\n", table.TableName, err.Error())
@@ -86,7 +87,7 @@ func SortColumnByGormModelFile(tables []pipe.Table, dirs []string) ([]pipe.Table
 	return tables, resultErr
 }
 
-func parseStructFields(fileContent string) ([]string, error) {
+func parseStructFields(namer schema.Namer, fileContent string) ([]string, error) {
 	structRe := regexp.MustCompile(`(?s)type\s+\w+\s+struct\s*\{(.*?)\}`)
 	fieldRe := regexp.MustCompile(`(?m)^\s*(\w+)\s+\w+.*$`)
 
@@ -101,7 +102,8 @@ func parseStructFields(fileContent string) ([]string, error) {
 	var fields []string
 	for _, match := range fieldMatches {
 		if len(match) > 1 {
-			fields = append(fields, strcase.ToSnake(match[1]))
+			// gormのcodeをみるかぎりColumnNameの第一引数は使われてない。https://github.com/go-gorm/gorm/blob/73a988ceb22651e01c968a9ec20ae1709e73c8e6/schema/naming.go#L61
+			fields = append(fields, namer.ColumnName("", match[1]))
 		}
 	}
 
