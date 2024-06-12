@@ -19,11 +19,12 @@ type strutInfo struct {
 
 func SortColumnByGormModelFile(namer schema.Namer, tables []pipe.Table, dirs []string) ([]pipe.Table, error) {
 
-	filePaths := make([]string, 100)
+	var filePaths []string
 	var err error
 
 	for _, dir := range dirs {
-		if filePaths, err = getFilePaths(dir, filePaths); err != nil {
+		filePaths, err = getFilePaths(dir, filePaths)
+		if err != nil {
 			return nil, err
 		}
 	}
@@ -44,10 +45,9 @@ func SortColumnByGormModelFile(namer schema.Namer, tables []pipe.Table, dirs []s
 
 			// TODO:線形探索なので遅い
 			for i, t := range tables {
-				if t.TableName != namer.TableName(structInfo.name) {
-					continue
+				if t.TableName == namer.TableName(structInfo.name) {
+					table = &tables[i]
 				}
-				table = &tables[i]
 			}
 
 			if table == nil {
@@ -61,7 +61,9 @@ func SortColumnByGormModelFile(namer schema.Namer, tables []pipe.Table, dirs []s
 
 			var reorderedColumns []pipe.Column
 			for _, fieldName := range structInfo.fieldNames {
-				if column, ok := columnMap[fieldName]; ok {
+
+				columnName := namer.ColumnName("", fieldName)
+				if column, ok := columnMap[columnName]; ok {
 					reorderedColumns = append(reorderedColumns, column)
 				}
 			}
@@ -92,7 +94,7 @@ func getStructInfo(filepath string) ([]strutInfo, error) {
 		return nil, err
 	}
 
-	strutInfoList := make([]strutInfo, 1)
+	var strutInfoList []strutInfo
 
 	ast.Inspect(f, func(n ast.Node) bool {
 		switch x := n.(type) {
@@ -105,6 +107,7 @@ func getStructInfo(filepath string) ([]strutInfo, error) {
 						structInfo.fieldNames = append(structInfo.fieldNames, name.Name)
 					}
 				}
+				strutInfoList = append(strutInfoList, structInfo)
 			}
 		}
 		return true
@@ -112,15 +115,15 @@ func getStructInfo(filepath string) ([]strutInfo, error) {
 	return strutInfoList, nil
 }
 
-func getFilePaths(dir string, paths []string) ([]string, error) {
+func getFilePaths(dir string, filePaths []string) ([]string, error) {
 	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
 		if !info.IsDir() && strings.HasSuffix(info.Name(), ".go") {
-			paths = append(paths, path)
+			filePaths = append(filePaths, path)
 		}
 		return nil
 	})
-	return paths, err
+	return filePaths, err
 }

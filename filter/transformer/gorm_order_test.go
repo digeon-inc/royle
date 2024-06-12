@@ -24,7 +24,7 @@ func TestSortColumnByGorm(t *testing.T) {
 			args: args{
 				tables: []pipe.Table{
 					{
-						TableName: "user",
+						TableName: "users",
 						Comment:   "user comment",
 						Columns: []pipe.Column{
 							{
@@ -62,7 +62,7 @@ func TestSortColumnByGorm(t *testing.T) {
 						},
 					},
 					{
-						TableName: "user_detail",
+						TableName: "user_details",
 						Comment:   "user detail comment",
 						Columns: []pipe.Column{
 							{
@@ -76,7 +76,7 @@ func TestSortColumnByGorm(t *testing.T) {
 							{
 								ColumnName:          "user_id",
 								ColumnType:          "string",
-								ReferencedTableName: "user",
+								ReferencedTableName: "users",
 								ConstraintTypes:     "FOREIGN KEY",
 							},
 							{
@@ -94,7 +94,7 @@ func TestSortColumnByGorm(t *testing.T) {
 			},
 			want: []pipe.Table{
 				{
-					TableName: "user",
+					TableName: "users",
 					Comment:   "user comment",
 					Columns: []pipe.Column{
 						{
@@ -132,7 +132,7 @@ func TestSortColumnByGorm(t *testing.T) {
 					},
 				},
 				{
-					TableName: "user_detail",
+					TableName: "user_details",
 					Comment:   "user detail comment",
 					Columns: []pipe.Column{
 						{
@@ -142,7 +142,7 @@ func TestSortColumnByGorm(t *testing.T) {
 						{
 							ColumnName:          "user_id",
 							ColumnType:          "string",
-							ReferencedTableName: "user",
+							ReferencedTableName: "users",
 							ConstraintTypes:     "FOREIGN KEY",
 						},
 						{
@@ -166,7 +166,7 @@ func TestSortColumnByGorm(t *testing.T) {
 			args: args{
 				tables: []pipe.Table{
 					{
-						TableName: "user",
+						TableName: "users",
 						Comment:   "user comment",
 						Columns: []pipe.Column{
 							{
@@ -212,7 +212,7 @@ func TestSortColumnByGorm(t *testing.T) {
 						},
 					},
 					{
-						TableName: "user_detail",
+						TableName: "user_details",
 						Comment:   "user detail comment",
 						Columns: []pipe.Column{
 							{
@@ -226,7 +226,7 @@ func TestSortColumnByGorm(t *testing.T) {
 							{
 								ColumnName:          "user_id",
 								ColumnType:          "string",
-								ReferencedTableName: "user",
+								ReferencedTableName: "users",
 								ConstraintTypes:     "FOREIGN KEY",
 							},
 							{
@@ -244,7 +244,7 @@ func TestSortColumnByGorm(t *testing.T) {
 			},
 			want: []pipe.Table{
 				{
-					TableName: "user",
+					TableName: "users",
 					Comment:   "user comment",
 					Columns: []pipe.Column{
 						{
@@ -290,7 +290,7 @@ func TestSortColumnByGorm(t *testing.T) {
 					},
 				},
 				{
-					TableName: "user_detail",
+					TableName: "user_details",
 					Comment:   "user detail comment",
 					Columns: []pipe.Column{
 						{
@@ -300,7 +300,7 @@ func TestSortColumnByGorm(t *testing.T) {
 						{
 							ColumnName:          "user_id",
 							ColumnType:          "string",
-							ReferencedTableName: "user",
+							ReferencedTableName: "users",
 							ConstraintTypes:     "FOREIGN KEY",
 						},
 						{
@@ -324,7 +324,7 @@ func TestSortColumnByGorm(t *testing.T) {
 			args: args{
 				tables: []pipe.Table{
 					{
-						TableName: "user",
+						TableName: "users",
 						Comment:   "user comment",
 						Columns: []pipe.Column{
 							{
@@ -380,7 +380,7 @@ func TestSortColumnByGorm(t *testing.T) {
 						},
 					},
 					{
-						TableName: "user_detail",
+						TableName: "user_details",
 						Comment:   "user detail comment",
 						Columns: []pipe.Column{
 							{
@@ -394,7 +394,7 @@ func TestSortColumnByGorm(t *testing.T) {
 							{
 								ColumnName:          "user_id",
 								ColumnType:          "string",
-								ReferencedTableName: "user",
+								ReferencedTableName: "users",
 								ConstraintTypes:     "FOREIGN KEY",
 							},
 							{
@@ -412,7 +412,7 @@ func TestSortColumnByGorm(t *testing.T) {
 			},
 			want: []pipe.Table{
 				{
-					TableName: "user",
+					TableName: "users",
 					Comment:   "user comment",
 					Columns: []pipe.Column{
 						{
@@ -468,7 +468,7 @@ func TestSortColumnByGorm(t *testing.T) {
 					},
 				},
 				{
-					TableName: "user_detail",
+					TableName: "user_details",
 					Comment:   "user detail comment",
 					Columns: []pipe.Column{
 						{
@@ -478,7 +478,7 @@ func TestSortColumnByGorm(t *testing.T) {
 						{
 							ColumnName:          "user_id",
 							ColumnType:          "string",
-							ReferencedTableName: "user",
+							ReferencedTableName: "users",
 							ConstraintTypes:     "FOREIGN KEY",
 						},
 						{
@@ -502,7 +502,7 @@ func TestSortColumnByGorm(t *testing.T) {
 			args: args{
 				tables: []pipe.Table{
 					{
-						TableName: "user",
+						TableName: "users",
 						Comment:   "user comment",
 						Columns: []pipe.Column{
 							{
@@ -540,7 +540,7 @@ func TestSortColumnByGorm(t *testing.T) {
 						},
 					},
 					{
-						TableName: "user_detail",
+						TableName: "user_details",
 						Comment:   "user detail comment",
 						Columns: []pipe.Column{
 							{
@@ -554,7 +554,7 @@ func TestSortColumnByGorm(t *testing.T) {
 							{
 								ColumnName:          "user_id",
 								ColumnType:          "string",
-								ReferencedTableName: "user",
+								ReferencedTableName: "users",
 								ConstraintTypes:     "FOREIGN KEY",
 							},
 							{
@@ -598,7 +598,7 @@ func TestSortColumnByGorm(t *testing.T) {
 			},
 			want: []pipe.Table{
 				{
-					TableName: "user",
+					TableName: "users",
 					Comment:   "user comment",
 					Columns: []pipe.Column{
 						{
@@ -636,7 +636,7 @@ func TestSortColumnByGorm(t *testing.T) {
 					},
 				},
 				{
-					TableName: "user_detail",
+					TableName: "user_details",
 					Comment:   "user detail comment",
 					Columns: []pipe.Column{
 						{
@@ -646,7 +646,7 @@ func TestSortColumnByGorm(t *testing.T) {
 						{
 							ColumnName:          "user_id",
 							ColumnType:          "string",
-							ReferencedTableName: "user",
+							ReferencedTableName: "users",
 							ConstraintTypes:     "FOREIGN KEY",
 						},
 						{
