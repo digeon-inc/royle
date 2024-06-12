@@ -39,29 +39,32 @@ royle --host mysql --password password --port 3306 --user docker --database temp
 
 ## コマンドのフラグ
 
-### -h, --help
-コマンドについての説明
+### 主なフラグ
 
-### -x, --dirs
-gormファイルがあるディレクトリのパス。指定することでファイル内で宣言したカラム順になる。
+| フラグ    | 短縮形 | 説明                                     |
+|-----------|--------|------------------------------------------|
+| --host    | -s     | MYSQLのホスト (必須)                       |
+| --password| -p     | MYSQLのパスワード (必須)                   |
+| --port    | -r     | MYSQLのポート (必須)                       |
+| --user    | -u     | mysqlのユーザー (必須)                     |
+| --database| -d     | MYSQLのデータベース名 (必須)               |
+| --title   | -t     | ドキュメントのタイトル                     |
+| --help    | -h     | コマンドについての説明                     |
+| --dirs    | -x     | gormファイルがあるディレクトリのパス。指定することでファイル内で宣言したカラム順になる。 |
 
-### -t, --title
-ドキュメントのタイトル (default "ROYLE")
 
-### -s, --host
-MYSQLのホスト (必須)
+### gormファイルでソートするときに使うフラグ
 
-### -p, --password
-MYSQLのパスワード (必須)
+ `--dirs`フラグが指定された時だけ有効です。
+各フラグについての説明は[gormのドキュメント](https://gorm.io/ja_JP/docs/gorm_config.html#NamingStrategy)を参照してください。デフォルト値はgorm使用時と同じに設定してます。
 
-### -r, --port
-MYSQLのポート (必須)
-
-### -u, --user
-mysqlのユーザー (必須)
-
-### -d, --database
-MYSQLのデータベース名 (必須)
+| フラグ名              | デフォルト値 | 例                 |
+|----------------------|--------------|--------------------|
+| --table-prefix       | ""           | --table-prefix=my_prefix |
+| --singular-table     | false        | --singular-table=true   |
+| --replace-list       | nil          | --replace-list="old_name1　new_name1 old_name2 new_name2" |
+| --no-lowercase       | false        | --no-lowercase=true     |
+| --identifier-max-length | 64         | --identifier-max-length=100 |
 
 
 

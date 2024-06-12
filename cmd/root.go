@@ -134,9 +134,9 @@ func init() {
 	}
 
 	// gormのnamerの初期値
-	rootCmd.Flags().StringVar(&tablePrefix, "prefix", "", "Table prefix")
-	rootCmd.Flags().BoolVar(&singularTable, "singular", false, "Whether to use singular table names")
+	rootCmd.Flags().StringVar(&tablePrefix, "table-prefix", "", "Table prefix")
+	rootCmd.Flags().BoolVar(&singularTable, "singular-table", false, "Whether to use singular table names")
 	rootCmd.Flags().StringSliceVar(&replaceList, "replace-list", nil, "String replacer for table and column names")
 	rootCmd.Flags().BoolVar(&noLowerCase, "no-lowercase", false, "Whether to use lower case in identifiers")
-	rootCmd.Flags().IntVar(&identifierMaxLength, "max-length", 64, "Maximum length for identifiers")
+	rootCmd.Flags().IntVar(&identifierMaxLength, "identifier-max-length", 64, "Maximum length for identifiers")
 }
