@@ -75,6 +75,28 @@ func TestIntegration(t *testing.T) {
 					},
 				},
 				{
+					TableName: "user_details",
+					Comment:   "Stores basic information about users details",
+					Columns: []pipe.Column{
+						{ColumnName: "created_at", IsNullable: "YES", ColumnType: "datetime(3)"},
+						{ColumnName: "name", IsNullable: "NO", ColumnType: "varchar(255)"},
+						{ColumnName: "updated_at", IsNullable: "YES", ColumnType: "datetime(3)"},
+						{
+							ColumnName:      "user_detail_id",
+							IsNullable:      "NO",
+							ColumnType:      "varchar(30)",
+							ConstraintTypes: "PRIMARY KEY",
+						},
+						{
+							ColumnName:          "user_id",
+							IsNullable:          "YES",
+							ColumnType:          "int",
+							ReferencedTableName: "users",
+							ConstraintTypes:     "FOREIGN KEY",
+						},
+					},
+				},
+				{
 					TableName: "users",
 					Comment:   "Stores basic information about users",
 					Columns: []pipe.Column{
@@ -156,6 +178,28 @@ func TestIntegration(t *testing.T) {
 							ReferencedTableName: "",
 							ConstraintTypes:     "",
 						},
+					},
+				},
+				{
+					TableName: "user_details",
+					Comment:   "Stores basic information about users details",
+					Columns: []pipe.Column{
+						{
+							ColumnName:      "user_detail_id",
+							IsNullable:      "NO",
+							ColumnType:      "varchar(30)",
+							ConstraintTypes: "PRIMARY KEY",
+						},
+						{
+							ColumnName:          "user_id",
+							IsNullable:          "YES",
+							ColumnType:          "int",
+							ReferencedTableName: "users",
+							ConstraintTypes:     "FOREIGN KEY",
+						},
+						{ColumnName: "name", IsNullable: "NO", ColumnType: "varchar(255)"},
+						{ColumnName: "created_at", IsNullable: "YES", ColumnType: "datetime(3)"},
+						{ColumnName: "updated_at", IsNullable: "YES", ColumnType: "datetime(3)"},
 					},
 				},
 				{
