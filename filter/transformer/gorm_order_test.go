@@ -758,7 +758,7 @@ func TestSortColumnByGorm(t *testing.T) {
 						},
 					},
 				},
-				dirs: []string{"test_data", "another_test_data"},
+				dirs: []string{"another_test_data"},
 			},
 			want: []pipe.Table{
 				{

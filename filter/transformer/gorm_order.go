@@ -1,58 +1,57 @@
 package transformer
 
 import (
-	"fmt"
-	"log"
+	"go/ast"
+	"go/parser"
+	"go/token"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strings"
-	"sync"
 
 	"github.com/digeon-inc/royle/pipe"
 	"gorm.io/gorm/schema"
 )
 
+type strutInfo struct {
+	name       string
+	fieldNames []string
+}
+
 func SortColumnByGormModelFile(namer schema.Namer, tables []pipe.Table, dirs []string) ([]pipe.Table, error) {
 
-	paths := make(map[string]string)
+	filePaths := make([]string, 100)
 	var err error
 
 	for _, dir := range dirs {
-		if paths, err = getFilePaths(dir, paths); err != nil {
+		if filePaths, err = getFilePaths(dir, filePaths); err != nil {
 			return nil, err
 		}
 	}
 
-	var wg sync.WaitGroup
-	var mu sync.Mutex
-	var resultErr error
+	for _, filePath := range filePaths {
+		structInfoList, err := getStructInfo(filePath)
 
-	for i := range tables {
-		wg.Add(1)
-		go func(i int) {
-			defer wg.Done()
-			table := &tables[i]
-			filePath, ok := paths[table.TableName]
-			if !ok {
-				// テーブルのファイルがない場合はログを出力して、ソートせずにスルーする
-				log.Printf("No matching file found for table: %s\n", table.TableName)
-				return
+		if err != nil {
+			return nil, err
+		}
+		if len(structInfoList) == 0 {
+			// ファイル内にstructがない場合はログを出力して、ソートせずにスルーする
+			continue
+		}
+
+		for _, structInfo := range structInfoList {
+			var table *pipe.Table
+
+			// TODO:線形探索なので遅い
+			for i, t := range tables {
+				if t.TableName != namer.TableName(structInfo.name) {
+					continue
+				}
+				table = &tables[i]
 			}
 
-			content, err := os.ReadFile(filePath)
-			if err != nil {
-				mu.Lock()
-				resultErr = err
-				mu.Unlock()
-				return
-			}
-
-			fieldNames, err := parseStructFields(namer, string(content))
-			if err != nil {
-				// ファイル内にstructがない(modelが宣言されてない)場合はログを出力して、ソートせずにスルーする
-				log.Printf("Error parsing struct for table %s: %s\n", table.TableName, err.Error())
-				return
+			if table == nil {
+				continue
 			}
 
 			columnMap := make(map[string]pipe.Column)
@@ -61,7 +60,7 @@ func SortColumnByGormModelFile(namer schema.Namer, tables []pipe.Table, dirs []s
 			}
 
 			var reorderedColumns []pipe.Column
-			for _, fieldName := range fieldNames {
+			for _, fieldName := range structInfo.fieldNames {
 				if column, ok := columnMap[fieldName]; ok {
 					reorderedColumns = append(reorderedColumns, column)
 				}
@@ -79,45 +78,47 @@ func SortColumnByGormModelFile(namer schema.Namer, tables []pipe.Table, dirs []s
 			}
 
 			table.Columns = reorderedColumns
-		}(i)
-	}
-
-	wg.Wait()
-
-	return tables, resultErr
-}
-
-func parseStructFields(namer schema.Namer, fileContent string) ([]string, error) {
-	structRe := regexp.MustCompile(`(?s)type\s+\w+\s+struct\s*\{(.*?)\}`)
-	fieldRe := regexp.MustCompile(`(?m)^\s*(\w+)\s+\w+.*$`)
-
-	structMatches := structRe.FindStringSubmatch(fileContent)
-	if len(structMatches) < 2 {
-		return nil, fmt.Errorf("no struct found")
-	}
-
-	fieldsPart := structMatches[1]
-	fieldMatches := fieldRe.FindAllStringSubmatch(fieldsPart, -1)
-
-	var fields []string
-	for _, match := range fieldMatches {
-		if len(match) > 1 {
-			// gormのcodeをみるかぎりColumnNameの第一引数は使われてない。https://github.com/go-gorm/gorm/blob/73a988ceb22651e01c968a9ec20ae1709e73c8e6/schema/naming.go#L61
-			fields = append(fields, namer.ColumnName("", match[1]))
 		}
+
 	}
 
-	return fields, nil
+	return tables, nil
 }
 
-func getFilePaths(dir string, paths map[string]string) (map[string]string, error) {
+func getStructInfo(filepath string) ([]strutInfo, error) {
+	fset := token.NewFileSet()
+	f, err := parser.ParseFile(fset, filepath, nil, parser.SkipObjectResolution)
+	if err != nil {
+		return nil, err
+	}
+
+	strutInfoList := make([]strutInfo, 1)
+
+	ast.Inspect(f, func(n ast.Node) bool {
+		switch x := n.(type) {
+		case *ast.TypeSpec:
+			if structType, ok := x.Type.(*ast.StructType); ok {
+				var structInfo strutInfo
+				structInfo.name = x.Name.Name
+				for _, field := range structType.Fields.List {
+					for _, name := range field.Names {
+						structInfo.fieldNames = append(structInfo.fieldNames, name.Name)
+					}
+				}
+			}
+		}
+		return true
+	})
+	return strutInfoList, nil
+}
+
+func getFilePaths(dir string, paths []string) ([]string, error) {
 	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
 		if !info.IsDir() && strings.HasSuffix(info.Name(), ".go") {
-			fileNameWithoutExt := strings.TrimSuffix(info.Name(), filepath.Ext(info.Name()))
-			paths[fileNameWithoutExt] = path
+			paths = append(paths, path)
 		}
 		return nil
 	})
