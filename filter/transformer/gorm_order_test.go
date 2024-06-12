@@ -6,6 +6,7 @@ import (
 	"github.com/digeon-inc/royle/filter/transformer"
 	"github.com/digeon-inc/royle/pipe"
 	"github.com/google/go-cmp/cmp"
+	"gorm.io/gorm/schema"
 )
 
 func TestSortColumnByGorm(t *testing.T) {
@@ -827,7 +828,7 @@ func TestSortColumnByGorm(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			actual, err := transformer.SortColumnByGormModelFile(tt.args.tables, tt.args.dirs)
+			actual, err := transformer.SortColumnByGormModelFile(schema.NamingStrategy{}, tt.args.tables, tt.args.dirs)
 			if err != nil {
 				t.Errorf("SortColumnByGorm error = %v", err)
 			}

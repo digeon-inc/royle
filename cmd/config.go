@@ -2,9 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"strings"
-
-	"gorm.io/gorm/schema"
 )
 
 func DSN() string {

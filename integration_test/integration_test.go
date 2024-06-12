@@ -9,6 +9,7 @@ import (
 	"github.com/digeon-inc/royle/filter/transformer"
 	"github.com/digeon-inc/royle/pipe"
 	"github.com/google/go-cmp/cmp"
+	"gorm.io/gorm/schema"
 )
 
 func TestIntegration(t *testing.T) {
@@ -215,7 +216,7 @@ func TestIntegration(t *testing.T) {
 				t.Errorf("diff =%v", cmp.Diff(gotTables, tt.wantTables))
 			}
 
-			gotSortedTables, err := transformer.SortColumnByGormModelFile(gotTables, []string{"test_data", "another_test_data"})
+			gotSortedTables, err := transformer.SortColumnByGormModelFile(schema.NamingStrategy{}, gotTables, []string{"test_data", "another_test_data"})
 			if err != nil {
 				t.Errorf("SortColumnByGormModelFile error = %v", err)
 			}
