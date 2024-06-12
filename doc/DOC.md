@@ -32,7 +32,7 @@ MergeMetadataIntoTablesでは、FetchColumnMetadataとFetchTableMetadataから�
 
 #### SortColumnByGormModelFile (optional)
 
-SortColumnByGormModelFileでは指定されたディレクトリ（複数可）内のファイル（複数可）に宣言されたgormのmodel（複数可）を読み込み、そのモデルのカラム順になるようにカラムをソートする。宣言されてないカラムはソートされたカラムの後に追加される。また、ファイルがないテーブルのカラムはソートされない。
+SortColumnByGormModelFileでは指定されたディレクトリ（複数可）内のファイル（複数可）に宣言されたgormのmodel（複数可）を読み込み、そのモデルのカラム順になるようにカラムをソートする。モデルで宣言されてないカラム(データベース内だけに存在するカラム)はソートされたカラムの後に追加される。また、モデルがないテーブルのカラムはソートされない。
 
 ### consumer（データの表示器）
 
