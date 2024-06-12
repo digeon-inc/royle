@@ -78,33 +78,16 @@ royle --host mysql --password password --port 3306 --user docker --database temp
 
 ### 生成したドキュメントの表について
 
-#### Name
-カラムの名前。
-
-#### TYPE
-カラムのデータ型。
-
-#### Nullable
-カラムの NULL 値可能性。 この値は、NULL 値をカラムに格納できる場合は YES で、格納できない場合は NO
-
-#### Constraints
-制約のタイプ。 値は、UNIQUE, PRIMARY KEY, FOREIGN KEY または (MySQL 8.0.16) CHECK
-
-#### Referenced
-FOREIGN KEY が参照しているテーブルの名前。
-
-#### Default
-カラムのデフォルト値。
-
-#### Extra
-カラムについての追加情報。
-- AUTO_INCREMENT 属性
-- ON UPDATE CURRENT_TIMESTAMP 属性
-- 生成されたカラムの STORED GENERATED または VIRTUAL GENERATED
-- 式のデフォルト値を持つカラムの DEFAULT_GENERATED
-
-#### Comment
-カラムのコメント。
+| 列名        | 説明                         |
+|-------------|------------------------------|
+| Name        | カラムの名前。               |
+| TYPE        | カラムのデータ型。           |
+| Nullable    | カラムの NULL 値可能性。<br/> この値は、NULL 値をカラムに格納できる場合は YES で、<br/>格納できない場合は NO。 |
+| Constraints | 制約のタイプ。<br/>値は、UNIQUE, PRIMARY KEY, FOREIGN KEY または (MySQL 8.0.16) CHECK。 |
+| Referenced  | FOREIGN KEY が参照しているテーブルの名前。 |
+| Default     | カラムのデフォルト値。       |
+| Extra       | カラムについての追加情報。<br/>AUTO_INCREMENT 属性、ON UPDATE CURRENT_TIMESTAMP 属性、<br/>生成されたカラムの STORED GENERATED または VIRTUAL GENERATED、<br/>式のデフォルト値を持つカラムの DEFAULT_GENERATED。 |
+| Comment     | カラムのコメント。           |
 
 ## モチベーション
 
